@@ -1,0 +1,124 @@
+=== Plugin Name ===
+Contributors: sliverwareapps
+Donate link: http://sliverwareapps.com/registry
+Tags: paypal, wedding, gifts, registry, shower, bridal
+Requires at least: 3.3.1
+Tested up to: 3.4.1
+Stable tag: 1.3.0.1
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl.html
+
+Adds a gift registry. Enables you to request and track gifts, plus receive payment immediately via PayPal.
+http://sliverwareapps.com/registry/
+
+== Description ==
+
+The Gift Registry plugin enables you to add your very own registry to your WordPress site. This plugin has several
+advantages over other web-based registries, including:
+
+* Use your very own WordPress site to customize as much as you like
+* Get paid instantly via PayPal – other sites make you wait for a check
+* Get notified instantly of gifts via email and keep track of whom gave what
+* Automatically tracks how many wish list items are left outstanding
+* Free to install and create your wish list
+* Register for $13.95 (plus paypal fees) to receive payments; compare with 8-12% commission from other sites
+
+
+Notes
+
+Items placed on your registry are representative only, you will only received the AMOUNT for each item, not the items
+themselves. The Gift Registry plugin is integrated with PayPal for fund transfer only.
+
+The Gift Registry plugin uses PayPal’s Button API and Instant Payment Notification (IPN) service to manage the gift
+transaction. For more information on regarding these features, please see the documentation on PayPal’s website.
+
+While you may change the quantity requested or price of each item whenever you like, this will not affect the quantity
+or price paid for gifts received.
+
+
+Gift Statuses
+
+In the admin panel you will see a list of “orders” for gifts you have received.
+
+* CREATED - The shopper began the checkout process but did not complete it.
+* RECEIVED - The payment has been received, but the IPN notification (including sender info) has not been received.
+* COMPLETED - The payment has been completed and the IPN notification has been received. You should see the sender’s information included on the gift.
+* IPN ERROR - The IPN was received but there was an error processing it. For more information, check out the PayPal site or let us know in the comments.
+
+
+== Installation ==
+
+
+* Download and install the WordPress Gift Registry Plugin
+* Add a link to your gift registry wish list page from somewhere on your site
+* Create a wish list of your gift registry items
+* Configure Your PayPal Settings (IMPORTANT)
+
+     1. Login to PayPal
+     1. Under My Account, click Upgrade
+     1. Select Business Account
+     1. Provide your information, and click Done
+     1. Go to My Account > Profile > My selling tools > Website preferences
+     1. Make sure Auto Return is turned On
+     1. Set Return URL to:
+        http://yourwebsite.com/?gr_internal=gift-registry-transaction-complete
+     1. Go to My Account > Profile > My selling tools > Instant payment notifications
+     1. Set Notification URL to:
+        http://yourwebsite.com/wp-content/plugins/gift_registry/php/ipn_handler.php
+        And make sure IPN messages are Enabled
+
+* Purchase an Authentication Key for your plugin
+* Test the checkout to make sure it works as expected
+* Receive Gifts (hooray!)
+
+Please note that you MUST configure your PayPal settings as described above or you will not be able to track gifts received.
+(you will, however, still be able to receive them)
+
+
+== Frequently Asked Questions ==
+
+= What versions of WordPress are compatible with this plugin? =
+The WordPress Gift Registry Plugin has been verified with WordPress versions 3.3.1 – 3.4.1, but we’re not aware of
+issues with any other versions. If you find any, please let us know.
+
+= On the Admin page, nothing seems to happen when I click a button, I can’t save my PayPal address or URLs, and/or I get redirected to the General Settings page when I try to save =
+These are all signs that a javascript error occurred when the page was initializing. Check for script errors using
+a debug tool (Firebug, Firebug Lite, Chrome/Safari Developer Tools) and make sure other plugins aren’t causing
+problems. Stuck? Send us the error via http://sliverwareapps.com/contact and we’ll check it out.
+
+= Why doesn’t ‘From’ or ‘Fees’ show under Gifts Received? The status shows as ‘RECEIVED’? =
+Most likely because you haven’t configured your PayPal account to use IPN Notifications. To check the status of an
+individual transaction, log in to PayPal and go to My Account > History > IPN History.
+
+
+== Screenshots ==
+
+* Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view screenshots
+
+== Changelog ==
+
+= 1.3 =
+* Enabled authentication-based free trial
+
+= 1.2.1 =
+* Fix to incorrect reference to wp-blog-header.php file in ipn_handler.php
+
+= 1.2 =
+* Automatically creates list and cart pages upon installation
+* Adds error checking to page configuration
+* Improvements to alerts
+* Added Quick Start section to Admin page
+
+= 1.1 =
+* Added custom gift item option
+* Added cart quantity increment buttons
+* Added message customization options
+* Improved empty cart UI
+
+= 1.0 =
+* Initial release
+
+
+== Upgrade Notice ==
+
+* no notices
