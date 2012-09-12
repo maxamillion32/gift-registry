@@ -4,7 +4,7 @@
 Plugin Name: Gift Registry
 Plugin URI: http://sliverwareapps.com/registry/
 Description: Adds a gift registry to WordPress. Enables you to request and track gifts, plus receive payment immediately via PayPal.
-Version: v1.3
+Version: v1.3.0.1
 Author: sliverwareapps
 Author URI: http://sliverwareapps.com
 License: GPL
