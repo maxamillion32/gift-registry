@@ -4,12 +4,11 @@ Donate link: http://sliverwareapps.com/registry
 Tags: paypal, wedding, gifts, registry, shower, bridal
 Requires at least: 3.3.1
 Tested up to: 3.4.1
-Stable tag: 1.3.0.1
+Stable tag: 1.3.0.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
-Adds a gift registry. Enables you to request and track gifts, plus receive payment immediately via PayPal.
-http://sliverwareapps.com/registry/
+A Gift Registry to request and track gifts via PayPal. Ideal for weddings, births, and other occasions.
 
 == Description ==
 
@@ -93,7 +92,7 @@ individual transaction, log in to PayPal and go to My Account > History > IPN Hi
 
 == Screenshots ==
 
-* Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view screenshots
+Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view screenshots
 
 == Changelog ==
 
