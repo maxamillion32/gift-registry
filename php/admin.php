@@ -19,9 +19,9 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
 */
 
 function gr_admin_js() {
-    wp_enqueue_script('jquery.lightbox_me.js', plugins_url('gift_registry/js/jquery.lightbox_me.js'), array( 'jquery' ));
-    wp_enqueue_script('jquery.validate.min.js', plugins_url('gift_registry/js/jquery.validate.min.js'), array( 'jquery' ));
-    wp_enqueue_script('admin.js', plugins_url('gift_registry/js/admin.js'), array( 'jquery' ));
+    wp_enqueue_script('jquery.lightbox_me.js', plugins_url('gift-registry/js/jquery.lightbox_me.js'), array( 'jquery' ));
+    wp_enqueue_script('jquery.validate.min.js', plugins_url('gift-registry/js/jquery.validate.min.js'), array( 'jquery' ));
+    wp_enqueue_script('admin.js', plugins_url('gift-registry/js/admin.js'), array( 'jquery' ));
 }
 
 function gr_plugin_menu() {
@@ -252,7 +252,7 @@ function gr_admin_registry_item_form() { ?>
                 <div class='gr-img-preview'>
                     <input type='text' id='img_url' name='img_url' />
                     <div id='img-preview-wrap'>
-                        <img id='img-preview' height='75px' width='115px' src='<?php echo plugins_url('gift_registry/img/placeholder.gif'); ?>' />
+                        <img id='img-preview' height='75px' width='115px' src='<?php echo plugins_url('gift-registry/img/placeholder.gif'); ?>' />
                     </div>
                     <span>Provide a url to an image file. Once provided, a preview will display in a placeholder to the right.</span>
                     <a class='clear_img' href='#'>Clear Image</a>

@@ -4,7 +4,7 @@ Donate link: http://sliverwareapps.com/registry
 Tags: paypal, wedding, gifts, registry, shower, bridal
 Requires at least: 3.3.1
 Tested up to: 3.4.1
-Stable tag: 1.3.0.2
+Stable tag: 1.3.1.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -63,7 +63,7 @@ In the admin panel you will see a list of “orders” for gifts you have receiv
         http://yourwebsite.com/?gr_internal=gift-registry-transaction-complete
      1. Go to My Account > Profile > My selling tools > Instant payment notifications
      1. Set Notification URL to:
-        http://yourwebsite.com/wp-content/plugins/gift_registry/php/ipn_handler.php
+        http://yourwebsite.com/wp-content/plugins/gift-registry/php/ipn_handler.php
         And make sure IPN messages are Enabled
 
 * Purchase an Authentication Key for your plugin
@@ -120,4 +120,5 @@ Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view scre
 
 == Upgrade Notice ==
 
-* no notices
+= 1.3.1.2 =
+Fixes a file reference bug that prevents load of javascript. All users should upgrade immediately.

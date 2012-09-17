@@ -22,13 +22,12 @@ function gr_cart_html($cart) {
     $html = "<div id='gr_cart_wrap'><h2>Your Registry Cart</h2>";
     $html .= "<div class='gr_clear_wrap'>";
 
+//    $html .= "<form id='gr_cart_form' action='https://www.sandbox.paypal.com/cgi-bin/webscr' method='post'>";
     $html .= "<form id='gr_cart_form' action='https://www.paypal.com/cgi-bin/webscr' method='post'>";
     $html .= "<table id='gr_cart_tbl'>";
     $html .= "<tr><th>Item Name</th><th>Qty</th><th>Each</th><th>Total</th><th></th></tr>";
 
     if ( !empty($cart->items) ) {
-//        $html .= "<form id='gr_cart_form' action='https://www.sandbox.paypal.com/cgi-bin/webscr' method='post'>";
-
         $i = 1; // because starting at 0 paypal doesn't recognize the cart
         $cartTotal = 0;
         foreach ( $cart->items as $item ) {
@@ -63,7 +62,7 @@ function gr_cart_html($cart) {
     $html .= "</table>";
 
     $html .= gr_button_html(); // from gr_functions.php
-    $html .= "<div class='loading_icon'><img src='" . plugins_url('gift_registry/img/ajax-loader-med.gif') . "' alt='loading' /></div>";
+    $html .= "<div class='loading_icon'><img src='" . plugins_url('gift-registry/img/ajax-loader-med.gif') . "' alt='loading' /></div>";
 
     $html .= "<input type='button' id='gr_clear_cart' value='Empty Cart' />";
     $html .= "<input type='button' id='gr_update_cart_btn' value='Update Total' />"; // doesn't have functionality, just a button to trigger change/blur events of qty input

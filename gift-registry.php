@@ -4,7 +4,7 @@
 Plugin Name: Gift Registry
 Plugin URI: http://sliverwareapps.com/registry/
 Description: A Gift Registry to request and track gifts via PayPal. Ideal for weddings, births, and other occasions.
-Version: v1.3.0.2
+Version: v1.3.1.2
 Author: sliverwareapps
 Author URI: http://sliverwareapps.com
 License: GPL
@@ -64,13 +64,13 @@ class GiftRegistry {
         );
 
         wp_enqueue_script('jquery');
-        wp_enqueue_script('jquery.cookie.js', plugins_url('gift_registry/js/jquery.cookie.js'));
-        wp_enqueue_script('registry.js', plugins_url('gift_registry/js/registry.js'), array( 'jquery' ));
-        wp_enqueue_script('list.js', plugins_url('gift_registry/js/list.js'), array( 'jquery' ));
-        wp_enqueue_script('cart.js', plugins_url('gift_registry/js/cart.js'), array( 'jquery' ));
+        wp_enqueue_script('jquery.cookie.js', plugins_url('gift-registry/js/jquery.cookie.js'));
+        wp_enqueue_script('registry.js', plugins_url('gift-registry/js/registry.js'), array( 'jquery' ));
+        wp_enqueue_script('list.js', plugins_url('gift-registry/js/list.js'), array( 'jquery' ));
+        wp_enqueue_script('cart.js', plugins_url('gift-registry/js/cart.js'), array( 'jquery' ));
         wp_localize_script('list.js', 'GR', $data);
-        wp_enqueue_style('gr-style', plugins_url('gift_registry/css/registry.css'));
-        wp_enqueue_script('mycart.js', plugins_url('gift_registry/js/mycart.js'), array( 'jquery' ));
+        wp_enqueue_style('gr-style', plugins_url('gift-registry/css/registry.css'));
+        wp_enqueue_script('mycart.js', plugins_url('gift-registry/js/mycart.js'), array( 'jquery' ));
 
         register_post_type( 'gr_internal',
             array(

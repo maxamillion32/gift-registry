@@ -83,7 +83,7 @@ function gr_custom_amount_enabled_html() {
 
     $html = "<form>
                 <div class='gr_item gr_custom_item'>
-                    <span class='gr_item_img_wrap'><img class='gr_item_img' src='" . plugins_url('gift_registry/img/custom_gift.jpg') . "' alt='' /></span>
+                    <span class='gr_item_img_wrap'><img class='gr_item_img' src='" . plugins_url('gift-registry/img/custom_gift.jpg') . "' alt='' /></span>
                     <div class='gr_item_details'>
                         <div class='gr_item_title'><h6>Custom Gift Item and Amount</h6></div>
                         <div><p>Want to give a custom item and amount? Add your item and amount here. Please note that you will have the chance to update quantities or add additional notes and wishes later.</p></div>
