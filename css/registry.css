@@ -322,7 +322,9 @@ input.gr_qty {
 .gr-admin-form .loading_icon {
     float: right;
 }
-.loading #gr_checkout {
+.loading #gr_checkout,
+.loading #gr_test_checkout_button,
+.loading .gr_trial_msg {
     display: none;
 }
 .loading_icon {
@@ -383,7 +385,8 @@ input.gr_qty {
 }
 
 
-.gr_free_trial_button {
+.gr_free_trial_button,
+#gr_test_checkout_button {
     cursor: pointer;
     float: right;
     padding:  15px;
@@ -397,17 +400,20 @@ input.gr_qty {
     width: 215px;
     border: 1px solid #AAA;
 }
-.gr_free_trial_button:hover {
+.gr_free_trial_button:hover,
+#gr_test_checkout_button:hover {
     text-decoration: none;
     border: 1px solid #000;
 }
-.gr_free_trial_button:active {
+.gr_free_trial_button:active,
+#gr_test_checkout_button:active {
     background: -webkit-linear-gradient(top, #333, #693); /* Safari 5.1, Chrome 10+ */
     background: -moz-linear-gradient(top, #333, #693); /* Firefox 3.6+ */
     -moz-box-shadow: 0 0 20px #000;
     -webkit-box-shadow: 0 0 20px #000;
 }
-.gr_ft_text {
+.gr_ft_text,
+#gr_test_checkout_button {
     white-space: nowrap;
     display: block;
     font-size: 1.5em;
