@@ -4,7 +4,7 @@
 Plugin Name: Gift Registry
 Plugin URI: http://sliverwareapps.com/registry/
 Description: A Gift Registry to request and track gifts via PayPal. Ideal for weddings, births, and other occasions.
-Version: v1.4
+Version: v1.5
 Author: sliverwareapps
 Author URI: http://sliverwareapps.com
 License: GPL
@@ -45,6 +45,7 @@ define('GR_SITE_URL', 'http://sliverwareapps.com');
 require_once('php/gr_functions.php');
 
 
+// TODO: Move "edit item" to lightbox??
 
 class GiftRegistry {
     public static function init() {
@@ -351,6 +352,8 @@ class GiftRegistry {
         unset($_POST['action']);
         unset($_POST['current_id']);
 
+        $_POST['price'] = str_replace('$', '', $_POST['price']);
+
         $wpdb->insert( $wpdb->prefix . 'registry_item', $_POST );
         $registry_item = $_POST;
         $registry_item['id'] = $wpdb->insert_id;
@@ -414,6 +417,8 @@ class GiftRegistry {
 
         unset($_POST['action']);
         unset($_POST['current_id']);
+
+        $_POST['price'] = str_replace('$', '', $_POST['price']);
 
         $wpdb->update($wpdb->prefix . 'registry_item', $_POST, $where);
 

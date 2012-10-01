@@ -79,7 +79,8 @@ function gr_admin_version_widgets() {
                 </li>
                 <li class='buttons'>
                     <div class='loading_icon'>
-                        <img src='<?php echo  plugins_url('gift-registry/img/ajax-loader-med.gif'); ?>' alt='loading...' /></div>
+                        <img src='<?php echo  plugins_url('gift-registry/img/ajax-loader-med.gif'); ?>' alt='loading...' />
+                    </div>
                     <input type='button' class='button-primary' id='save_auth_btn' value='Save' />
                 </li>
             </ul>
