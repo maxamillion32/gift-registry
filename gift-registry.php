@@ -4,7 +4,7 @@
 Plugin Name: Gift Registry
 Plugin URI: http://sliverwareapps.com/registry/
 Description: A Gift Registry to request and track gifts via PayPal. Ideal for weddings, births, and other occasions.
-Version: v1.3.1.2
+Version: v1.5
 Author: sliverwareapps
 Author URI: http://sliverwareapps.com
 License: GPL
@@ -38,11 +38,14 @@ require_once dirname(__FILE__) . '/php/utils.php';
 
 define('GR_DEFAULT_LIST_PAGE_TITLE', 'Gift Registry - Wish List');
 define('GR_DEFAULT_CART_PAGE_TITLE', 'Gift Registry - Cart');
+define('GR_AUTH_SERVER_URL', 'http://auth.sliverwareapps.com');
+define('GR_SITE_URL', 'http://sliverwareapps.com');
 
 
 require_once('php/gr_functions.php');
 
 
+// TODO: Move "edit item" to lightbox??
 
 class GiftRegistry {
     public static function init() {
@@ -57,7 +60,7 @@ class GiftRegistry {
                 'cartLinkText' => get_option( 'gr_cart_link_text', 'View My Gift Registry Cart' )
             ),
             'Messages' => array(
-                'error' => 'Sorry, an error occurred. Please go to http://sliverwareapps.com/contact for support.',
+                'error' => 'Sorry, an error occurred. Please go to ' . GR_SITE_URL . '/contact for support.',
                 'auth_para' => $vconfig['auth_para'],
                 'auth_status' => $vconfig['auth_status']
             )
@@ -349,6 +352,8 @@ class GiftRegistry {
         unset($_POST['action']);
         unset($_POST['current_id']);
 
+        $_POST['price'] = str_replace('$', '', $_POST['price']);
+
         $wpdb->insert( $wpdb->prefix . 'registry_item', $_POST );
         $registry_item = $_POST;
         $registry_item['id'] = $wpdb->insert_id;
@@ -412,6 +417,8 @@ class GiftRegistry {
 
         unset($_POST['action']);
         unset($_POST['current_id']);
+
+        $_POST['price'] = str_replace('$', '', $_POST['price']);
 
         $wpdb->update($wpdb->prefix . 'registry_item', $_POST, $where);
 

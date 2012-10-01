@@ -4,7 +4,7 @@ $vconfig = array(
     'auth_para' => array(
         'verified' => '<p>Thank you for purchasing the WordPress Gift Registry Plugin. Guests should now be able to purchase gifts
                  via the <a href="' . get_option( 'gr_cart_url' ) . '" target="_blank">cart page</a> on your site.</p>',
-        'unverified' => '<p>In order to receive gifts using this plugin, you will need to <a href="http://auth.sliverwareapps.com">purchase
+        'unverified' => '<p>In order to receive gifts using this plugin, you will need to <a href="' . GR_AUTH_SERVER_URL . '">purchase
                  an authentication key</a>. Once you have purchased your key, enter it into the field below. If the
                  authentication was successful, you will be able to see that guests can check out via PayPal from the
                  <a href="' . get_option( 'gr_cart_url' ) . '">cart page</a> of your site.</p>'
@@ -17,7 +17,7 @@ $vconfig = array(
 
 function gr_admin_quick_start() {
     $hide = empty($_COOKIE['GR_quick_start_state']) ? false : true;
-    $ipn_url = site_url() . "/wp-content/plugins/gift_registry/php/ipn_handler.php";
+    $ipn_url = site_url() . "/wp-content/plugins/gift-registry/php/ipn_handler.php";
     $trx_comp_url = site_url() . "/?gr_internal=gift-registry-transaction-complete";
     ?>
     <div id='gr_quick_start' class='gr-instructions <?php echo $hide ? 'gr_hidden' : ''; ?>'>
@@ -25,7 +25,7 @@ function gr_admin_quick_start() {
         <p>Please note that you <b>MUST</b> configure your PayPal settings as described below or you will not be able to track gifts received.
             <span class='gr_sub_text'>(you will, however, still be able to receive them)</span></p>
         <ol>
-            <li>Purchase an <a href='http://auth.sliverwareapps.com/' target='_blank'>authentication key</a> and enter it into the Authentication form below</li>
+            <li>Purchase an <a href='<?php echo GR_AUTH_SERVER_URL; ?>' target='_blank'>authentication key</a> and enter it into the Authentication form below</li>
             <li>Configure Your PayPal Settings (<b><span style='color:red'>IMPORTANT</span></b>)
                 <ol class='gr_sub_list'>
                     <li>Login to PayPal</li>
@@ -79,7 +79,8 @@ function gr_admin_version_widgets() {
                 </li>
                 <li class='buttons'>
                     <div class='loading_icon'>
-                        <img src='<?php echo  plugins_url('gift_registry/img/ajax-loader-med.gif'); ?>' alt='loading...' /></div>
+                        <img src='<?php echo  plugins_url('gift-registry/img/ajax-loader-med.gif'); ?>' alt='loading...' />
+                    </div>
                     <input type='button' class='button-primary' id='save_auth_btn' value='Save' />
                 </li>
             </ul>
@@ -92,26 +93,28 @@ function gr_admin_version_widgets() {
 function gr_button_html() {
     $html = '';
     $auth_key = get_option('gr_auth_key');
+    $site_url = site_url();
+    $dev_site = preg_match("~^https?://(localhost|127\.0\.0\.1)/~", $site_url);
 
     // code to authenticate with server, which will return generated php
-    if ( $auth_key && get_option('gr_auth_key_valid') ) {
-        $action = 'authentications/verify/' . $auth_key . '.json';
-        $query = '?site_url=' . urlencode( site_url() ); 
+    if ( $dev_site || ( $auth_key && get_option('gr_auth_key_valid') ) ) {
+        $action = 'authentications/verify/' . urlencode( $auth_key ) . '.json';
+        $query = '?site_url=' . urlencode( $site_url );
         $query .= '&paypal_email=' . urlencode( get_option('gr_paypal_email') );
 
         $response = gr_api_request($action, $query);
         $response = json_decode($response);
-        
+
         if ( !empty($response->button_html) ) {
             $html = str_replace( 'BUTTON_SRC', plugins_url($response->button_src), $response->button_html);
         }
     }
 
     if ( !$html ) {
-        $html .= "<a class='gr_free_trial_button' href='http://auth.sliverwareapps.com' target=_blank>
+        $html .= "<a class='gr_free_trial_button' href='" . GR_AUTH_SERVER_URL . "' target=_blank>
                     <span class='gr_ft_text'>Register This Plugin</span>
                 </a>
-                <p class='gr_trial_msg'>This is a trial installation of the <a target='blank' href='http://sliverwareapps.com/registry/'>WordPress Gift Registry plugin</a>. Click this button to purchase the plugin and enable checkout with PayPal.</p>";
+                <p class='gr_trial_msg'>This is a trial installation of the <a target='blank' href='" . GR_SITE_URL ."/registry/'>WordPress Gift Registry plugin</a>. Click this button to purchase the plugin and enable checkout with PayPal.</p>";
     }
 
     return $html;

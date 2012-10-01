@@ -73,9 +73,9 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    $('#gr_checkout').click(function( e ) {
+    function checkout( e ) {
         var data, wrap = $('#gr_cart_wrap');
-        
+
         wrap.addClass('loading');
 
         data = { action: 'prepare_cart' };
@@ -103,7 +103,10 @@ jQuery(document).ready(function ($) {
                 GR.Alert(GR.Messages.error, { error: true });
             }
         });
-    });
+    }
+
+    $('#gr_checkout').click( checkout );
+    $('#gr_test_checkout_button').click( checkout );
 
     function qtyChanged( e ) {
         updateCartTotal( $(this) );
