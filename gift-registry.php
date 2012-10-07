@@ -4,7 +4,7 @@
 Plugin Name: Gift Registry
 Plugin URI: http://sliverwareapps.com/registry/
 Description: A Gift Registry to request and track gifts via PayPal. Ideal for weddings, births, and other occasions.
-Version: v1.5
+Version: v1.6
 Author: sliverwareapps
 Author URI: http://sliverwareapps.com
 License: GPL
@@ -35,17 +35,14 @@ $gr_db_version = "1.0";
 
 require_once dirname(__FILE__) . '/php/admin.php';
 require_once dirname(__FILE__) . '/php/utils.php';
+require_once dirname(__FILE__) . '/php/GRCurrency.php';
+require_once dirname(__FILE__) . '/settings.php';
 
-define('GR_DEFAULT_LIST_PAGE_TITLE', 'Gift Registry - Wish List');
-define('GR_DEFAULT_CART_PAGE_TITLE', 'Gift Registry - Cart');
-define('GR_AUTH_SERVER_URL', 'http://auth.sliverwareapps.com');
-define('GR_SITE_URL', 'http://sliverwareapps.com');
 
 
 require_once('php/gr_functions.php');
 
-
-// TODO: Move "edit item" to lightbox??
+// TODO: improve build script to automatically increment build version
 
 class GiftRegistry {
     public static function init() {
@@ -57,7 +54,12 @@ class GiftRegistry {
                 'listUrl' => get_option( 'gr_list_url' ),
                 'cartUrl' => get_option( 'gr_cart_url' ),
                 'listLinkText' => get_option( 'gr_list_link_text', 'View Gift Registry Wish List' ),
-                'cartLinkText' => get_option( 'gr_cart_link_text', 'View My Gift Registry Cart' )
+                'cartLinkText' => get_option( 'gr_cart_link_text', 'View My Gift Registry Cart' ),
+                'currency' => array(
+                    'symbol' => GRCurrency::symbol(),
+                    'code' => get_option('gr_currency_code'),
+                    'name' => GRCurrency::name()
+                )
             ),
             'Messages' => array(
                 'error' => 'Sorry, an error occurred. Please go to ' . GR_SITE_URL . '/contact for support.',
@@ -96,6 +98,7 @@ class GiftRegistry {
         $installed_ver = get_option('gr_db_version');
 
         add_option("gr_paypal_email", "");
+        add_option("gr_currency_code", "USD");
         add_option("gr_cart_url", "");
         add_option("gr_list_url", "");
         add_option("gr_cart_page_id", "");
@@ -323,9 +326,19 @@ class GiftRegistry {
             update_option('gr_paypal_email', $_POST['paypal_email']);
         }
 
+        update_option('gr_currency_code', $_POST['currency_code']);
         update_option('gr_custom_amount_enabled', $_POST['gr_custom_amount_enabled']);
 
-        echo json_encode( array('statusCode' => 0) );
+        $currency = array(
+            'symbol' => GRCurrency::symbol(),
+            'name' => GRCurrency::name(),
+            'code' => $_POST['currency_code']
+        );
+
+        echo json_encode( array(
+            'statusCode' => 0,
+            'currency' => $currency
+        ));
         die();
     }
 

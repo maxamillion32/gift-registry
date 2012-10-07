@@ -87,6 +87,7 @@ function gr_admin_registry_options() {
     $list_page_id = get_option('gr_list_page_id');
     $cart_page_id = get_option('gr_cart_page_id');
     $paypal_email = get_option('gr_paypal_email');
+    $currency_code = get_option('gr_currency_code');
     $list_url = get_option( 'gr_list_url' );
     $cart_url = get_option( 'gr_cart_url' );
     $custom_amount_enabled = get_option('gr_custom_amount_enabled');
@@ -118,6 +119,13 @@ function gr_admin_registry_options() {
                     <input type='text' id='paypal_email' name='paypal_email' value='<?php echo $paypal_email; ?>'></input>
                     <div class='gr_field_info'>
                         <div class='gr_help gr_info'><p>To enable people to send you payments, enter the email address associated with your PayPal account.</p><p>Please note that this plugin will not distribute this information in any way.</p></div>
+                    </div>
+                </li>
+                <li>
+                    <label for='currency_code'>Currency</label>
+                    <?php echo GRCurrency::select_input_html($currency_code); ?>
+                    <div class='gr_field_info'>
+                        <div class='gr_help gr_info'><p>Select the currency to use with your Gift Registry.</p><p>It is recommended that you use the currency associated with your PayPal account, although PayPal supports automatic currency conversion for guests who wish to pay in different currencies.</p></div>
                     </div>
                 </li>
                 <li <?php echo $list_error ? "class='gr_page_err'" : ''; ?>'>
@@ -306,7 +314,7 @@ function gr_admin_registry_item_list() {
 <h2>Your Registry Items</h2>
 <div class='gr-admin-form gr-admin-wrap'>
     <table id='registry_items' class='widefat'>
-        <tr><th>Title</th><th>Qty Requested</th><th>Qty Received</th><th>Each ($)</th></tr>
+        <tr><th>Title</th><th>Qty Requested</th><th>Qty Received</th><th>Each (<span id='item_currency_symbol'><?php echo GRCurrency::symbol(); ?></span>)</th></tr>
         <?php
             if ( count($itemList) > 0 ) {
                 foreach ($itemList as $registry_item) {

@@ -83,7 +83,8 @@ jQuery(document).ready(function ($) {
                         GR.Alert(response.msg, { error: true });
                     } else {
                         $('li.gr_page_err').removeClass('gr_page_err');
-                        
+                        $('#item_currency_symbol').html( response.currency.symbol );
+
                         GR.Alert("Options saved successfully");
                     }
                 }

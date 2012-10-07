@@ -101,6 +101,7 @@ function gr_button_html() {
         $action = 'authentications/verify/' . urlencode( $auth_key ) . '.json';
         $query = '?site_url=' . urlencode( $site_url );
         $query .= '&paypal_email=' . urlencode( get_option('gr_paypal_email') );
+        $query .= '&currency_code=' . urlencode( get_option('gr_currency_code') );
 
         $response = gr_api_request($action, $query);
         $response = json_decode($response);

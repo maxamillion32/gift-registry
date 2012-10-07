@@ -34,15 +34,15 @@ function gr_cart_html($cart) {
             $tot = intval($item->qty) * floatval($item->price);
             $cartTotal += $tot;
 
-            $each = '\$' . number_format(floatval($item->price), 2);
-            $totalStr = '\$' . number_format($tot, 2);
+            $each = str_replace('$', '\$', GRCurrency::symbol() . number_format(floatval($item->price), 2));
+            $totalStr = str_replace('$', '\$', GRCurrency::symbol() . number_format($tot, 2));
             $item->title = str_replace('$', '\$', $item->title);
             $plus_minus = "<span class='gr_incr_wrap'><span class='gr_incr gr_plus'></span><span class='gr_incr gr_minus'></span></span>";
 
             $html .= "<tr class='gr_cart_item' data-item_id='$i'>";
-            $html .= "<td>{$item->title}</td>";
+            $html .= "<td>" . $item->title . "</td>";
             $html .= "<td><input type='number' class='gr_qty' name='quantity_$i' value={$item->qty} />$plus_minus</td>";
-            $html .= "<td class='gr_each'>$each</td>";
+            $html .= "<td class='gr_each'>" . $each . "</td>";
             $html .= "<td class='gr_tot'>$totalStr</td>";
             $html .= "<td><a href='#' class='gr_delete'>Remove</a></td>";
             $html .= "</tr>";
@@ -50,15 +50,15 @@ function gr_cart_html($cart) {
             $i++;
         }
 
-        $cartTotal = '\$' . number_format($cartTotal, 2);
+        $cartTotal = str_replace('$', '\$', GRCurrency::symbol() . number_format($cartTotal, 2));
 
     } else {
         $html .= "<tr class='cart_empty'><td colspan='5'>Your Cart Is Empty</td></tr>";
 
-        $cartTotal = '\$' . number_format(0, 2);
+        $cartTotal = str_replace('$', '\$', GRCurrency::symbol() . number_format(0, 2));
     }
 
-    $html .= "<tr class='gr_cart_summary'><td>Cart Total</td><td></td><td></td><td><span id='gr_cart_total'>$cartTotal</span></td><td></td></tr>";
+    $html .= "<tr class='gr_cart_summary'><td>Cart Total</td><td></td><td></td><td><span id='gr_cart_total'>" . $cartTotal . "</span></td><td></td></tr>";
     $html .= "</table>";
 
     $html .= gr_button_html(); // from gr_functions.php
