@@ -58,13 +58,14 @@ function gr_item_html($item) {
         $$key = str_replace('$', '\$', $var); // escape $ because wp processing treats them as variables
     }
 
+    $symbol = str_replace('$', '\$', GRCurrency::symbol());
     $html = "<div class='gr_item'>
                 <span class='gr_item_img_wrap'><img class='gr_item_img' src='{$img_url}' alt='' /></span>
                 <div class='gr_item_details'>
                     <div class='gr_item_title'><h6>{$title}</h6></div>
                     <div class='gr_item_descr'>{$descr}</div>
                     <div class='gr_item_url'><a href='{$info_url}' target='_blank'>More Info</a></div>
-                    <div class='gr_item_price'>Price: <span>{$item['price']}</span></div>
+                    <div class='gr_item_price'>Price: <span>{$symbol}{$item['price']}</span></div>
                     <div class='gr_item_needed'>
                         Quantity Requested: <span>{$item['qty_requested']}</span>
                         $received

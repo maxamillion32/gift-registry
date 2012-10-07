@@ -21,14 +21,16 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
 
 jQuery(document).ready(function ($) {
 
+    var $C = GR.Data.currency;
+
     $('#gr_cart_tbl a.gr_delete').click(function( e ) {
         var row = $(this).closest('tr'),
             item_id = parseInt( row.data('item_id') ),
-            line_tot_amt = parseFloat($('.gr_tot', row).html().replace('$', '')),
+            line_tot_amt = parseFloat($('.gr_tot', row).html().replace($C.symbol, '')),
             cart_tot = $('#gr_cart_total'),
-            cart_tot_amt = parseFloat(cart_tot.html().replace('$', ''));
+            cart_tot_amt = parseFloat(cart_tot.html().replace($C.symbol, ''));
 
-        cart_tot.html('$' + (cart_tot_amt - line_tot_amt).toFixed(2));
+        cart_tot.html($C.symbol + (cart_tot_amt - line_tot_amt).toFixed(2));
         GR.MyCart.removeItem( item_id - 1 );
         GR.MyCart.save();
         row.fadeOut('slow', function() {
@@ -69,13 +71,13 @@ jQuery(document).ready(function ($) {
 
         if ( len > 0 ) { // only add the empty row if the cart isn't already empty
             $('#gr_cart_tbl tr').first().after( emptyRow );
-            $('#gr_cart_total').html('$0.00');
+            $('#gr_cart_total').html( $C.symbol + '0.00' );
         }
     });
 
-    $('#gr_checkout').click(function( e ) {
+    function checkout( e ) {
         var data, wrap = $('#gr_cart_wrap');
-        
+
         wrap.addClass('loading');
 
         data = { action: 'prepare_cart' };
@@ -103,7 +105,10 @@ jQuery(document).ready(function ($) {
                 GR.Alert(GR.Messages.error, { error: true });
             }
         });
-    });
+    }
+
+    $('#gr_checkout').click( checkout );
+    $('#gr_test_checkout_button').click( checkout );
 
     function qtyChanged( e ) {
         updateCartTotal( $(this) );
@@ -112,15 +117,15 @@ jQuery(document).ready(function ($) {
     function updateCartTotal( qtyInput ) {
         var row = qtyInput.closest('tr'),
             line_tot = $('.gr_tot', row),
-            cur_line_tot = parseFloat(line_tot.html().replace('$', '')),
-            line_each = parseFloat($('.gr_each', row).html().replace('$', '')),
+            cur_line_tot = parseFloat(line_tot.html().replace($C.symbol, '')),
+            line_each = parseFloat($('.gr_each', row).html().replace($C.symbol, '')),
             new_line_tot = qtyInput.val() * line_each,
             cart_tot = $('#gr_cart_total'),
             delta = new_line_tot - cur_line_tot,
             item_id = row.data('item_id') - 1; // -1 to get the index, paypal cart items start at 1
 
-        line_tot.html('$' + new_line_tot.toFixed(2) );
-        cart_tot.html('$' + ( parseFloat(cart_tot.html().replace('$', '')) + delta ).toFixed(2) );
+        line_tot.html($C.symbol + new_line_tot.toFixed(2) );
+        cart_tot.html($C.symbol + ( parseFloat(cart_tot.html().replace($C.symbol, '')) + delta ).toFixed(2) );
 
         GR.MyCart.data.items[item_id].qty = qtyInput.val();
         GR.MyCart.save();

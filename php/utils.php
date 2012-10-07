@@ -71,9 +71,7 @@ function chk_empty($arr, $key) {
 
 
 function gr_api_request($action, $query, $method = 'GET') {
-    $serverUrl = 'http://auth.sliverwareapps.com/';
-
-    $url = $serverUrl . $action;
+    $url = GR_AUTH_SERVER_URL . '/' . $action;
     $query .= '&method=' . $method;
 
     if ( strtoupper($method) != 'GET' ) {

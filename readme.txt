@@ -4,7 +4,7 @@ Donate link: http://sliverwareapps.com/registry
 Tags: paypal, wedding, gifts, registry, shower, bridal
 Requires at least: 3.3.1
 Tested up to: 3.4.1
-Stable tag: 1.3.1.2
+Stable tag: 1.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -12,15 +12,19 @@ A Gift Registry to request and track gifts via PayPal. Ideal for weddings, birth
 
 == Description ==
 
-The Gift Registry plugin enables you to add your very own registry to your WordPress site. This plugin has several
+The Gift Registry plugin enables you to add your very own gift registry to your WordPress site. This plugin has several
 advantages over other web-based registries, including:
 
 * Use your very own WordPress site to customize as much as you like
 * Get paid instantly via PayPal – other sites make you wait for a check
 * Get notified instantly of gifts via email and keep track of whom gave what
 * Automatically tracks how many wish list items are left outstanding
+* Receive gifts in any of PayPal's [supported currencies](https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_nvp_currency_codes)
 * Free to install and create your wish list
 * Register for $13.95 (plus paypal fees) to receive payments; compare with 8-12% commission from other sites
+
+Please note that only administrators are able to create wish lists - this plugin does not support wish lists for
+multiple users.
 
 
 Notes
@@ -95,6 +99,16 @@ individual transaction, log in to PayPal and go to My Account > History > IPN Hi
 Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view screenshots
 
 == Changelog ==
+
+= 1.6 =
+* Added support for PayPal's [supported currencies](https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_nvp_currency_codes)
+
+= 1.5 =
+* Moved add/edit item form to lightbox
+* Other minor admin UI improvements and input validation
+
+= 1.4 =
+* Enabled test checkout on localhost
 
 = 1.3 =
 * Enabled authentication-based free trial
