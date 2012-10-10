@@ -72,7 +72,7 @@ jQuery(document).ready(function ($) {
                 url: GR.Data.ajaxUrl,
                 data: $(form).serialize(),
                 success: function( data ) {
-                    var response = $.parseJSON( data ), err_field;
+                    var response = GR.parseJSON( data ), err_field;
 
                     $( form ).removeClass( 'loading' );
 
@@ -123,7 +123,7 @@ jQuery(document).ready(function ($) {
                 url: GR.Data.ajaxUrl,
                 data: $(form).serialize(),
                 success: function( data ) {
-                    var response = $.parseJSON( data ),
+                    var response = GR.parseJSON( data ),
                         _key;
 
                     $('#gr_auth_form').removeClass('loading');
@@ -241,7 +241,7 @@ jQuery(document).ready(function ($) {
             url: GR.Data.ajaxUrl,
             data: data,
             success: function( data ) {
-                var item = $.parseJSON( data );
+                var item = GR.parseJSON( data );
 
                 GR.FormMap.map(item);
                 $('#gr_item_form_title').html("Editing '" + item.title + "'");

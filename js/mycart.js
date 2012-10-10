@@ -88,7 +88,7 @@ jQuery(document).ready(function ($) {
             data: data,
             success: function( data ) {
                 try {
-                    var response = $.parseJSON( data ),
+                    var response = GR.parseJSON( data ),
                         cartForm = $('#gr_cart_form');
                 } catch ( ex ) {
                     GR.Alert(GR.Messages.error);
@@ -123,6 +123,13 @@ jQuery(document).ready(function ($) {
             cart_tot = $('#gr_cart_total'),
             delta = new_line_tot - cur_line_tot,
             item_id = row.data('item_id') - 1; // -1 to get the index, paypal cart items start at 1
+
+        // reset qty to 1 if non-numeric is entered
+        if ( qtyInput.val().match(/[^\d]/g) ) {
+            qtyInput.val(1);
+            new_line_tot = line_each;
+            delta = new_line_tot - cur_line_tot;
+        }
 
         line_tot.html($C.symbol + new_line_tot.toFixed(2) );
         cart_tot.html($C.symbol + ( parseFloat(cart_tot.html().replace($C.symbol, '')) + delta ).toFixed(2) );

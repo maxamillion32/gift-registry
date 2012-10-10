@@ -4,7 +4,7 @@ Donate link: http://sliverwareapps.com/registry
 Tags: paypal, wedding, gifts, registry, shower, bridal
 Requires at least: 3.3.1
 Tested up to: 3.4.1
-Stable tag: 1.6
+Stable tag: 1.6.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -29,7 +29,7 @@ multiple users.
 
 Notes
 
-Items placed on your registry are representative only, you will only received the AMOUNT for each item, not the items
+Items placed on your registry are representative only, you will only receive the AMOUNT for each item, not the items
 themselves. The Gift Registry plugin is integrated with PayPal for fund transfer only.
 
 The Gift Registry plugin uses PayPal’s Button API and Instant Payment Notification (IPN) service to manage the gift
@@ -50,7 +50,6 @@ In the admin panel you will see a list of “orders” for gifts you have receiv
 
 
 == Installation ==
-
 
 * Download and install the WordPress Gift Registry Plugin
 * Add a link to your gift registry wish list page from somewhere on your site
@@ -99,6 +98,10 @@ individual transaction, log in to PayPal and go to My Account > History > IPN Hi
 Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view screenshots
 
 == Changelog ==
+
+= 1.6.1 =
+* Added checks and fallbacks for server authentication requests
+* Added link to log for easier troubleshooting
 
 = 1.6 =
 * Added support for PayPal's [supported currencies](https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_nvp_currency_codes)

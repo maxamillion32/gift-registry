@@ -74,31 +74,127 @@ function gr_api_request($action, $query, $method = 'GET') {
     $url = GR_AUTH_SERVER_URL . '/' . $action;
     $query .= '&method=' . $method;
 
-    if ( strtoupper($method) != 'GET' ) {
-        // Set the curl parameters.
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+    try {
+        if ( strtoupper($method) != 'GET' ) {
 
-        // Turn off the server and peer verification (TrustManager Concept).
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+            if ( function_exists('curl_init') ) {
+                $httpResponse = curl_post_contents($url, $query);
+            } else if ( ini_get('allow_url_fopen') ) {
+                $httpResponse = file_post_contents($url . $query);
+            } else { // error
+                throw new Exception('Neither curl or fopen wrappers are enabled, no way to establish authentication server. Please contact your hosting provider.');
+            }
 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
+        } else {
 
-        // Set the request as a POST FIELD for curl.
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+            if ( function_exists('curl_init') ) {
+                $httpResponse = curl_get_contents($url, $query);
+            } else if ( ini_get('allow_url_fopen') ) {
+                $httpResponse = file_get_contents($url . $query);
+            } else { // error
+                throw new Exception('Neither curl or fopen wrappers are enabled, no way to establish authentication server. Please contact your hosting provider.');
+            }
 
-        // Get response from the server.
-        $httpResponse = curl_exec($ch);
-    } else {
-        $httpResponse = file_get_contents( $url . $query );
-    }
+        }
 
-    if(!$httpResponse) {
-        logToFile("authorization api request failed: ".curl_error($ch).'('.curl_errno($ch).')');
+        if(!$httpResponse) {
+            throw new Exception("Unexpected empty response from auth server after successful connection. Check server logs for warnings.");
+        }
+    } catch(Exception $ex) {
+        logToFile("ERROR during request:\r\n\turl: $url\r\n\tquery: $query");
+        logToFile($ex->getMessage());
+
+        echo json_encode(
+            array(
+                'error' => 1,
+                'message' => $ex->getMessage()
+            )
+        );
+        die();
     }
 
     return $httpResponse;
+}
+
+function curl_post_contents($url, $query) {
+    // Set the curl parameters.
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_VERBOSE, 1);
+
+    // Turn off the server and peer verification (TrustManager Concept).
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+
+    // Set the request as a POST FIELD for curl.
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+
+    // Get response from the server.
+    $httpResponse = curl_exec($ch);
+
+    if (!$httpResponse) {
+        throw new Exception("authorization api request failed: ".curl_error($ch).'('.curl_errno($ch).')');
+    }
+
+    return $httpResponse;
+}
+
+function curl_get_contents($url, $query) {
+    // Set the curl parameters.
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url . $query);
+    curl_setopt($ch, CURLOPT_VERBOSE, 1);
+
+    // Turn off the server and peer verification (TrustManager Concept).
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+    // Get response from the server.
+    $httpResponse = curl_exec($ch);
+
+    if (!$httpResponse) {
+        throw new Exception("authorization api request failed: ".curl_error($ch).'('.curl_errno($ch).')');
+    }
+
+    return $httpResponse;
+}
+
+
+function file_post_contents($url,$headers=false) {
+    $url = parse_url($url);
+
+    if (!isset($url['port'])) {
+      if ($url['scheme'] == 'http') { $url['port']=80; }
+      elseif ($url['scheme'] == 'https') { $url['port']=443; }
+    }
+    $url['query'] = isset($url['query']) ? $url['query'] : '';
+
+    $url['protocol']=$url['scheme'].'://';
+    $eol="\r\n";
+
+    $headers =  "POST ".$url['protocol'].$url['host'].$url['path']." HTTP/1.0".$eol.
+                "Host: ".$url['host'].$eol.
+                "Referer: ".$url['protocol'].$url['host'].$url['path'].$eol.
+                "Content-Type: application/x-www-form-urlencoded".$eol.
+                "Content-Length: ".strlen($url['query']).$eol.
+                $eol.$url['query'];
+    $fp = fsockopen($url['host'], $url['port'], $errno, $errstr, 30);
+
+    if($fp) {
+        fputs($fp, $headers);
+        $result = '';
+        while(!feof($fp)) { $result .= fgets($fp, 128); }
+        fclose($fp);
+        if (!$headers) {
+            //removes headers
+            $pattern="/^.*\r\n\r\n/s";
+            $result=preg_replace($pattern,'',$result);
+        }
+        return $result;
+    }
 }

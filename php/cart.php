@@ -22,8 +22,7 @@ function gr_cart_html($cart) {
     $html = "<div id='gr_cart_wrap'><h2>Your Registry Cart</h2>";
     $html .= "<div class='gr_clear_wrap'>";
 
-//    $html .= "<form id='gr_cart_form' action='https://www.sandbox.paypal.com/cgi-bin/webscr' method='post'>";
-    $html .= "<form id='gr_cart_form' action='https://www.paypal.com/cgi-bin/webscr' method='post'>";
+    $html .= "<form id='gr_cart_form' action='" . GR_PAYPAL_URL . "/cgi-bin/webscr' method='post'>";
     $html .= "<table id='gr_cart_tbl'>";
     $html .= "<tr><th>Item Name</th><th>Qty</th><th>Each</th><th>Total</th><th></th></tr>";
 

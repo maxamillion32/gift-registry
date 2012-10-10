@@ -70,6 +70,7 @@ function gr_admin_registry_instructions() {
 
 function gr_links() {
     $hide = empty($_COOKIE['GR_quick_start_state']) || $_COOKIE['GR_quick_start_state'] != 'hidden' ? 'Hide' : 'Show';
+    $log = plugins_url('gift-registry/php/log');
     ?>
     <div class='gr-instructions'>
         <h2>Links</h2>
@@ -77,8 +78,8 @@ function gr_links() {
             <li><a id='gr_show_quick_start' class='gr_quick_start_toggle' href='#'><?php echo $hide; ?>&nbsp;Quick Start</a></li>
             <li><a href='http://sliverwareapps.com/registry/' target=_blank>Documentation</a></li>
             <li><a href='http://sliverwareapps.com/registry/#faq'>FAQ</a></li>
+            <li><a href='<?php echo $log; ?>' target='_blank'>Application Log</a></li>
         </ul>
-
     </div>
     <?php
 }

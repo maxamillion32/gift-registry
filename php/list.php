@@ -82,6 +82,8 @@ function gr_item_html($item) {
 function gr_custom_amount_enabled_html() {
     $gift_button_text = get_option('gr_gift_button_text');
 
+    $symbol = GRCurrency::symbol();
+
     $html = "<form>
                 <div class='gr_item gr_custom_item'>
                     <span class='gr_item_img_wrap'><img class='gr_item_img' src='" . plugins_url('gift-registry/img/custom_gift.jpg') . "' alt='' /></span>
@@ -93,7 +95,7 @@ function gr_custom_amount_enabled_html() {
                             <input type='text' id='gr_custom_item_title' name='gr_custom_item_title' />
                         </div>
                         <div>
-                            <label for='gr_custom_item_price'>Custom Amount</label>
+                            <label for='gr_custom_item_price'>Custom Amount&nbsp;($symbol)</label>
                             <input type='text' id='gr_custom_item_price' name='gr_custom_item_price' />
                         </div>
                         <button type='button' class='gr_custom_add_to_cart_btn'>{$gift_button_text}</button>
