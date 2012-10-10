@@ -32,7 +32,7 @@ jQuery(document).ready(function ($) {
     $('button.gr_custom_add_to_cart_btn').click(function( e ) {
         var item = {
             title: $('#gr_custom_item_title').val(),
-            price: $('#gr_custom_item_price').val(),
+            price: $('#gr_custom_item_price').val().replace(/[^\d\.]/g,''),
             qty: 1
         };
 

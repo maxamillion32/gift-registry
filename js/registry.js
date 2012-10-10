@@ -112,5 +112,18 @@ jQuery(document).ready(function ($) {
         return { 'height': height, 'width': width };
     }
 
+    GR.parseJSON = function( json ) {
+        var obj;
+
+        try {
+            obj = $.parseJSON( json );
+            return obj;
+        } catch (ex) {
+            return {
+                error: true,
+                message: "Oops! An invalid response was received from the server. Please check the log or contact <a href='http://sliverwareapps.com/contact'>Sliverware Support</a>"
+            }
+        }
+    }
 });
 
