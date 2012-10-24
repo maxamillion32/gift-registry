@@ -74,6 +74,13 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
     width: 120px;
     text-align: left;
 }
+.gr-admin-form .loading .buttons input {
+    display: none;
+}
+#gr_item_lightbox {
+    min-width: 600px;
+    padding: 0 20px;
+}
 .loading #save_auth_btn {
     display: none;
 }
@@ -106,6 +113,9 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
     padding-left: 168px;
     text-align: left;
     line-height: 1em;
+}
+.gr_opt_link {
+    margin-left: 10px;
 }
 
 .gr-admin-wrap input[type='text'],
@@ -143,14 +153,20 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
 }
 .gr-admin-form {
     clear: left;
-    margin-right: 500px;
+    margin-right: 510px;
 }
 .widget-liquid-right .gr-admin-form {
     margin-right: 0;
 }
 .gr-admin-form .buttons {
-    width: 461px;
+    max-width: 461px;
     overflow: hidden;
+    min-height: 32px; /* to prevent jitter when wait img is shown */
+}
+.gr-admin-form .buttons_wide {
+    width: auto;
+    max-width: 698px;
+    padding: 6px 1px;
 }
 .gr-admin-form li {
     position: relative;
@@ -161,8 +177,20 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
 .gr-admin-wrap form.editing #clear_item_btn {
     display: inline;
 }
-.gr-admin-wrap #clear_item_btn {
+.gr-admin-wrap #clear_item_btn,
+.gr-admin-wrap form.loading #clear_item_btn {
     display: none;
+}
+#registry_items,
+#registry_orders {
+    max-width: 700px;
+    clear: none;
+}
+.gr_close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
 }
 .gr_help {
     display: none;
@@ -180,6 +208,7 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
     display: inline-block;
     left: 475px;
     top: 0;
+    z-index: 1;
 }
 .gr_field_info p {
     margin: 0 0 5px 0;
@@ -322,7 +351,9 @@ input.gr_qty {
 .gr-admin-form .loading_icon {
     float: right;
 }
-.loading #gr_checkout {
+.loading #gr_checkout,
+.loading #gr_test_checkout_button,
+.loading .gr_trial_msg {
     display: none;
 }
 .loading_icon {
@@ -364,7 +395,7 @@ input.gr_qty {
 #gr_custom_item_price {
     width: 60px;
 }
-#gr_lightbox {
+.gr_lightbox {
     display: none;
     background-color: #FFF;
     -moz-box-shadow: 0 0 20px #000;
@@ -383,7 +414,8 @@ input.gr_qty {
 }
 
 
-.gr_free_trial_button {
+.gr_free_trial_button,
+#gr_test_checkout_button {
     cursor: pointer;
     float: right;
     padding:  15px;
@@ -397,17 +429,20 @@ input.gr_qty {
     width: 215px;
     border: 1px solid #AAA;
 }
-.gr_free_trial_button:hover {
+.gr_free_trial_button:hover,
+#gr_test_checkout_button:hover {
     text-decoration: none;
     border: 1px solid #000;
 }
-.gr_free_trial_button:active {
+.gr_free_trial_button:active,
+#gr_test_checkout_button:active {
     background: -webkit-linear-gradient(top, #333, #693); /* Safari 5.1, Chrome 10+ */
     background: -moz-linear-gradient(top, #333, #693); /* Firefox 3.6+ */
     -moz-box-shadow: 0 0 20px #000;
     -webkit-box-shadow: 0 0 20px #000;
 }
-.gr_ft_text {
+.gr_ft_text,
+#gr_test_checkout_button {
     white-space: nowrap;
     display: block;
     font-size: 1.5em;
@@ -423,4 +458,11 @@ input.gr_qty {
     line-height: 1em;
     font-size: 0.6em;
     color: #AAA;
+}
+
+#gr_warn_settings div {
+    font-size: 1.5em;
+    border: 1px solid red;
+    background-color: #F08080;
+    padding: 20px;
 }

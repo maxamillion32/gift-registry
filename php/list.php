@@ -22,7 +22,7 @@ function gr_list_html() {
     $list = GiftRegistry::item_list();
     $custom_amount_enabled = get_option('gr_custom_amount_enabled');
 
-    $html = '';
+    $html = "<div id='gr_warn_settings'><noscript>" . GR_NO_SCRIPT . "</noscript></div>";
     if (count($list) == 0 && $custom_amount_enabled == 'n') {
         $html = "There are not yet any wish list items added to this registry";
     } else {
@@ -58,13 +58,14 @@ function gr_item_html($item) {
         $$key = str_replace('$', '\$', $var); // escape $ because wp processing treats them as variables
     }
 
+    $symbol = str_replace('$', '\$', GRCurrency::symbol());
     $html = "<div class='gr_item'>
                 <span class='gr_item_img_wrap'><img class='gr_item_img' src='{$img_url}' alt='' /></span>
                 <div class='gr_item_details'>
                     <div class='gr_item_title'><h6>{$title}</h6></div>
                     <div class='gr_item_descr'>{$descr}</div>
                     <div class='gr_item_url'><a href='{$info_url}' target='_blank'>More Info</a></div>
-                    <div class='gr_item_price'>Price: <span>{$item['price']}</span></div>
+                    <div class='gr_item_price'>Price: <span>{$symbol}{$item['price']}</span></div>
                     <div class='gr_item_needed'>
                         Quantity Requested: <span>{$item['qty_requested']}</span>
                         $received
@@ -81,6 +82,8 @@ function gr_item_html($item) {
 function gr_custom_amount_enabled_html() {
     $gift_button_text = get_option('gr_gift_button_text');
 
+    $symbol = GRCurrency::symbol();
+
     $html = "<form>
                 <div class='gr_item gr_custom_item'>
                     <span class='gr_item_img_wrap'><img class='gr_item_img' src='" . plugins_url('gift-registry/img/custom_gift.jpg') . "' alt='' /></span>
@@ -92,7 +95,7 @@ function gr_custom_amount_enabled_html() {
                             <input type='text' id='gr_custom_item_title' name='gr_custom_item_title' />
                         </div>
                         <div>
-                            <label for='gr_custom_item_price'>Custom Amount</label>
+                            <label for='gr_custom_item_price'>Custom Amount&nbsp;($symbol)</label>
                             <input type='text' id='gr_custom_item_price' name='gr_custom_item_price' />
                         </div>
                         <button type='button' class='gr_custom_add_to_cart_btn'>{$gift_button_text}</button>

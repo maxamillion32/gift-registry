@@ -4,7 +4,7 @@
 Plugin Name: Gift Registry
 Plugin URI: http://sliverwareapps.com/registry/
 Description: A Gift Registry to request and track gifts via PayPal. Ideal for weddings, births, and other occasions.
-Version: v1.3.1.2
+Version: v1.6.2
 Author: sliverwareapps
 Author URI: http://sliverwareapps.com
 License: GPL
@@ -35,14 +35,20 @@ $gr_db_version = "1.0";
 
 require_once dirname(__FILE__) . '/php/admin.php';
 require_once dirname(__FILE__) . '/php/utils.php';
+require_once dirname(__FILE__) . '/php/GRCurrency.php';
+require_once dirname(__FILE__) . '/settings.php';
 
-define('GR_DEFAULT_LIST_PAGE_TITLE', 'Gift Registry - Wish List');
-define('GR_DEFAULT_CART_PAGE_TITLE', 'Gift Registry - Cart');
 
 
 require_once('php/gr_functions.php');
 
+// TODO: improve build script to automatically increment build version
+// TODO: add check for tables and throw error if they don't exist
 
+/*
+ * TODO: check for conflicts with prettyPhoto script when there are > 2 items in cart, script appears to clobber html content
+ * http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone/
+ */
 
 class GiftRegistry {
     public static function init() {
@@ -54,12 +60,18 @@ class GiftRegistry {
                 'listUrl' => get_option( 'gr_list_url' ),
                 'cartUrl' => get_option( 'gr_cart_url' ),
                 'listLinkText' => get_option( 'gr_list_link_text', 'View Gift Registry Wish List' ),
-                'cartLinkText' => get_option( 'gr_cart_link_text', 'View My Gift Registry Cart' )
+                'cartLinkText' => get_option( 'gr_cart_link_text', 'View My Gift Registry Cart' ),
+                'currency' => array(
+                    'symbol' => GRCurrency::symbol(),
+                    'code' => get_option('gr_currency_code'),
+                    'name' => GRCurrency::name()
+                )
             ),
             'Messages' => array(
-                'error' => 'Sorry, an error occurred. Please go to http://sliverwareapps.com/contact for support.',
+                'error' => 'Sorry, an error occurred. Please go to ' . GR_SITE_URL . '/contact for support.',
                 'auth_para' => $vconfig['auth_para'],
-                'auth_status' => $vconfig['auth_status']
+                'auth_status' => $vconfig['auth_status'],
+                'no_cookies' => GR_NO_COOKIES
             )
         );
 
@@ -93,6 +105,7 @@ class GiftRegistry {
         $installed_ver = get_option('gr_db_version');
 
         add_option("gr_paypal_email", "");
+        add_option("gr_currency_code", "USD");
         add_option("gr_cart_url", "");
         add_option("gr_list_url", "");
         add_option("gr_cart_page_id", "");
@@ -320,9 +333,19 @@ class GiftRegistry {
             update_option('gr_paypal_email', $_POST['paypal_email']);
         }
 
+        update_option('gr_currency_code', $_POST['currency_code']);
         update_option('gr_custom_amount_enabled', $_POST['gr_custom_amount_enabled']);
 
-        echo json_encode( array('statusCode' => 0) );
+        $currency = array(
+            'symbol' => GRCurrency::symbol(),
+            'name' => GRCurrency::name(),
+            'code' => $_POST['currency_code']
+        );
+
+        echo json_encode( array(
+            'statusCode' => 0,
+            'currency' => $currency
+        ));
         die();
     }
 
@@ -348,6 +371,8 @@ class GiftRegistry {
 
         unset($_POST['action']);
         unset($_POST['current_id']);
+
+        $_POST['price'] = str_replace('$', '', $_POST['price']);
 
         $wpdb->insert( $wpdb->prefix . 'registry_item', $_POST );
         $registry_item = $_POST;
@@ -412,6 +437,8 @@ class GiftRegistry {
 
         unset($_POST['action']);
         unset($_POST['current_id']);
+
+        $_POST['price'] = str_replace('$', '', $_POST['price']);
 
         $wpdb->update($wpdb->prefix . 'registry_item', $_POST, $where);
 
