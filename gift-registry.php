@@ -4,7 +4,7 @@
 Plugin Name: Gift Registry
 Plugin URI: http://sliverwareapps.com/registry/
 Description: A Gift Registry to request and track gifts via PayPal. Ideal for weddings, births, and other occasions.
-Version: v1.6.1
+Version: v1.6.2
 Author: sliverwareapps
 Author URI: http://sliverwareapps.com
 License: GPL
@@ -45,6 +45,11 @@ require_once('php/gr_functions.php');
 // TODO: improve build script to automatically increment build version
 // TODO: add check for tables and throw error if they don't exist
 
+/*
+ * TODO: check for conflicts with prettyPhoto script when there are > 2 items in cart, script appears to clobber html content
+ * http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone/
+ */
+
 class GiftRegistry {
     public static function init() {
         global $vconfig;
@@ -65,7 +70,8 @@ class GiftRegistry {
             'Messages' => array(
                 'error' => 'Sorry, an error occurred. Please go to ' . GR_SITE_URL . '/contact for support.',
                 'auth_para' => $vconfig['auth_para'],
-                'auth_status' => $vconfig['auth_status']
+                'auth_status' => $vconfig['auth_status'],
+                'no_cookies' => GR_NO_COOKIES
             )
         );
 

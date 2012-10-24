@@ -459,3 +459,10 @@ input.gr_qty {
     font-size: 0.6em;
     color: #AAA;
 }
+
+#gr_warn_settings div {
+    font-size: 1.5em;
+    border: 1px solid red;
+    background-color: #F08080;
+    padding: 20px;
+}

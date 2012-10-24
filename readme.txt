@@ -4,7 +4,7 @@ Donate link: http://sliverwareapps.com/registry
 Tags: paypal, wedding, gifts, registry, shower, bridal
 Requires at least: 3.3.1
 Tested up to: 3.4.1
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -26,9 +26,6 @@ advantages over other web-based registries, including:
 Please note that only administrators are able to create wish lists - this plugin does not support wish lists for
 multiple users.
 
-
-Notes
-
 Items placed on your registry are representative only, you will only receive the AMOUNT for each item, not the items
 themselves. The Gift Registry plugin is integrated with PayPal for fund transfer only.
 
@@ -38,15 +35,8 @@ transaction. For more information on regarding these features, please see the do
 While you may change the quantity requested or price of each item whenever you like, this will not affect the quantity
 or price paid for gifts received.
 
+Javascript and cookies must be enabled for this plugin to work correctly.
 
-Gift Statuses
-
-In the admin panel you will see a list of “orders” for gifts you have received.
-
-* CREATED - The shopper began the checkout process but did not complete it.
-* RECEIVED - The payment has been received, but the IPN notification (including sender info) has not been received.
-* COMPLETED - The payment has been completed and the IPN notification has been received. You should see the sender’s information included on the gift.
-* IPN ERROR - The IPN was received but there was an error processing it. For more information, check out the PayPal site or let us know in the comments.
 
 
 == Installation ==
@@ -92,12 +82,26 @@ problems. Stuck? Send us the error via http://sliverwareapps.com/contact and we�
 Most likely because you haven’t configured your PayPal account to use IPN Notifications. To check the status of an
 individual transaction, log in to PayPal and go to My Account > History > IPN History.
 
+= Are there any known conflicts with other plugins? =
+The only conflict we are aware of causes the cart page not to render when there are more than 2 items in your cart.
+Check to make sure the 'prettyPhoto' script is disabled if your theme supports it. 
+
+= What do the different Gift Statuses mean? =
+CREATED - The shopper began the checkout process but did not complete it.
+RECEIVED - The payment has been received, but the IPN notification (including sender info) has not been received.
+COMPLETED - The payment has been completed and the IPN notification has been received. You should see the sender’s information included on the gift.
+IPN ERROR - The IPN was received but there was an error processing it. For more information, check out the PayPal site or let us know in the comments.
+
+
 
 == Screenshots ==
 
 Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view screenshots
 
 == Changelog ==
+
+= 1.6.2 =
+* Added warning messages for disabled javascript or cookies
 
 = 1.6.1 =
 * Added checks and fallbacks for server authentication requests

@@ -19,7 +19,9 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
 */
 
 function gr_cart_html($cart) {
-    $html = "<div id='gr_cart_wrap'><h2>Your Registry Cart</h2>";
+    $html = "<div id='gr_warn_settings'><noscript>" . GR_NO_SCRIPT . "</noscript></div>";
+
+    $html .= "<div id='gr_cart_wrap'><h2>Your Registry Cart</h2>";
     $html .= "<div class='gr_clear_wrap'>";
 
     $html .= "<form id='gr_cart_form' action='" . GR_PAYPAL_URL . "/cgi-bin/webscr' method='post'>";

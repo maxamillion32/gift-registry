@@ -22,7 +22,7 @@ function gr_list_html() {
     $list = GiftRegistry::item_list();
     $custom_amount_enabled = get_option('gr_custom_amount_enabled');
 
-    $html = '';
+    $html = "<div id='gr_warn_settings'><noscript>" . GR_NO_SCRIPT . "</noscript></div>";
     if (count($list) == 0 && $custom_amount_enabled == 'n') {
         $html = "There are not yet any wish list items added to this registry";
     } else {

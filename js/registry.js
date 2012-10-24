@@ -21,6 +21,22 @@ var GR = GR || {};
 
 jQuery(document).ready(function ($) {
 
+    // courtesy http://sveinbjorn.org/cookiecheck
+    GR.cookiesEnabled = (function() {
+        var cookieEnabled = (navigator.cookieEnabled) ? true : false;
+
+        if (typeof navigator.cookieEnabled == "undefined" && !cookieEnabled) {
+            document.cookie="testcookie";
+            cookieEnabled = (document.cookie.indexOf("testcookie") != -1) ? true : false;
+        }
+
+        if ( !cookieEnabled ) {
+            $('#gr_warn_settings').html(GR.Messages.no_cookies);
+        }
+
+        return cookieEnabled;
+    })();
+
     GR.Alert = (function() {
         var alertDiv = $("<div id='gr_alert'></div>"),
             options = { },
