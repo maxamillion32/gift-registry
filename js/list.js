@@ -32,7 +32,7 @@ jQuery(document).ready(function ($) {
     $('button.gr_custom_add_to_cart_btn').click(function( e ) {
         var item = {
             title: $('#gr_custom_item_title').val(),
-            price: $('#gr_custom_item_price').val(),
+            price: $('#gr_custom_item_price').val().replace(/[^\d\.]/g,''),
             qty: 1
         };
 
@@ -40,6 +40,20 @@ jQuery(document).ready(function ($) {
         GR.MyCart.save();
 
         addItemComplete( e );
+    });
+
+    $('.gr-descr-hover').click( function( e ) {
+        var descr = $('.gr_item_descr', $(this).closest('.gr_item_details'));
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        descr.toggle();
+
+        $('body').bind('click', function( e ) {
+            descr.toggle();
+            $(this).unbind( e );
+        });
     });
 
     function addItemComplete( e ) {

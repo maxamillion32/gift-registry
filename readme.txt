@@ -4,7 +4,7 @@ Donate link: http://sliverwareapps.com/registry
 Tags: paypal, wedding, gifts, registry, shower, bridal
 Requires at least: 3.3.1
 Tested up to: 3.4.1
-Stable tag: 1.3.1.2
+Stable tag: 1.7
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -12,20 +12,21 @@ A Gift Registry to request and track gifts via PayPal. Ideal for weddings, birth
 
 == Description ==
 
-The Gift Registry plugin enables you to add your very own registry to your WordPress site. This plugin has several
+The Gift Registry plugin enables you to add your very own gift registry to your WordPress site. This plugin has several
 advantages over other web-based registries, including:
 
 * Use your very own WordPress site to customize as much as you like
 * Get paid instantly via PayPal – other sites make you wait for a check
 * Get notified instantly of gifts via email and keep track of whom gave what
 * Automatically tracks how many wish list items are left outstanding
+* Receive gifts in any of PayPal's [supported currencies](https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_nvp_currency_codes)
 * Free to install and create your wish list
 * Register for $13.95 (plus paypal fees) to receive payments; compare with 8-12% commission from other sites
 
+Please note that only administrators are able to create wish lists - this plugin does not support wish lists for
+multiple users.
 
-Notes
-
-Items placed on your registry are representative only, you will only received the AMOUNT for each item, not the items
+Items placed on your registry are representative only, you will only receive the AMOUNT for each item, not the items
 themselves. The Gift Registry plugin is integrated with PayPal for fund transfer only.
 
 The Gift Registry plugin uses PayPal’s Button API and Instant Payment Notification (IPN) service to manage the gift
@@ -34,19 +35,11 @@ transaction. For more information on regarding these features, please see the do
 While you may change the quantity requested or price of each item whenever you like, this will not affect the quantity
 or price paid for gifts received.
 
+Javascript and cookies must be enabled for this plugin to work correctly.
 
-Gift Statuses
-
-In the admin panel you will see a list of “orders” for gifts you have received.
-
-* CREATED - The shopper began the checkout process but did not complete it.
-* RECEIVED - The payment has been received, but the IPN notification (including sender info) has not been received.
-* COMPLETED - The payment has been completed and the IPN notification has been received. You should see the sender’s information included on the gift.
-* IPN ERROR - The IPN was received but there was an error processing it. For more information, check out the PayPal site or let us know in the comments.
 
 
 == Installation ==
-
 
 * Download and install the WordPress Gift Registry Plugin
 * Add a link to your gift registry wish list page from somewhere on your site
@@ -89,12 +82,43 @@ problems. Stuck? Send us the error via http://sliverwareapps.com/contact and we�
 Most likely because you haven’t configured your PayPal account to use IPN Notifications. To check the status of an
 individual transaction, log in to PayPal and go to My Account > History > IPN History.
 
+= Are there any known conflicts with other plugins? =
+The only conflict we are aware of causes the cart page not to render when there are more than 2 items in your cart.
+Check to make sure the 'prettyPhoto' script is disabled if your theme supports it. 
+
+= What do the different Gift Statuses mean? =
+CREATED - The shopper began the checkout process but did not complete it.
+RECEIVED - The payment has been received, but the IPN notification (including sender info) has not been received.
+COMPLETED - The payment has been completed and the IPN notification has been received. You should see the sender’s information included on the gift.
+IPN ERROR - The IPN was received but there was an error processing it. For more information, check out the PayPal site or let us know in the comments.
+
+
 
 == Screenshots ==
 
 Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view screenshots
 
 == Changelog ==
+
+= 1.7 =
+* Added grid layout, additional layout options, and misc bug fixes
+
+= 1.6.2 =
+* Added warning messages for disabled javascript or cookies
+
+= 1.6.1 =
+* Added checks and fallbacks for server authentication requests
+* Added link to log for easier troubleshooting
+
+= 1.6 =
+* Added support for PayPal's [supported currencies](https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_nvp_currency_codes)
+
+= 1.5 =
+* Moved add/edit item form to lightbox
+* Other minor admin UI improvements and input validation
+
+= 1.4 =
+* Enabled test checkout on localhost
 
 = 1.3 =
 * Enabled authentication-based free trial

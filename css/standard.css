@@ -1,0 +1,63 @@
+.gr_item {
+	margin: 30px 0;
+}
+.gr_item li {
+    list-style: none outside none;
+    margin: 5px 0;
+}
+.gr_item ul {
+    margin: 0;
+    padding: 0;
+}
+.gr_item p {
+	padding: 0;
+	line-height: 16px;
+    font-size: 0.8em;
+}
+.gr_item .gr_item_title {
+	margin-top: 0;
+	font-size: 18px;
+	font-weight: bold;
+}
+.gr_item img {
+	width: 100px;
+}
+.gr_item_img_wrap {
+    width: 100px;
+    min-height: 10px;
+    float: left;
+}
+.gr_item .gr_item_details {
+	float: left;
+	width: 450px;
+	text-align: justify;
+}
+.gr_item_details span {
+	float: right;
+}
+.gr_received {
+    margin: 5px 40px 0 0;
+    float: right;
+    font-size: 11px;
+    color: #666;
+}
+.gr_item_filled {
+    clear: right;
+}
+.gr_item_details div {
+	margin: 5px 0 5px 20px;
+}
+.gr_item_details button {
+	margin: 5px 0 35px 0;
+	float: right;
+}
+.gr_item .n {
+	font-weight: bold;
+}
+.gr_item .y {
+	font-weight: bold;
+	color: green;
+}
+.gr_item .clear {
+    clear: both;
+}
