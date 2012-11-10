@@ -74,6 +74,24 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
     width: 120px;
     text-align: left;
 }
+.gr-share {
+    margin: 10px 5px;
+    float: left;
+}
+.gr-review {
+    margin-right: 20px;
+    float: left;
+    width: 93px;
+    background: url(../img/stars.png) 0 -20px;
+    height: 20px;
+    display: inline-block;
+}
+.gr-stars {
+    height: 100%;
+    display: block;
+    width: 85px;
+    background: url(../img/stars.png);
+}
 .gr-admin-form .loading .buttons input {
     display: none;
 }
@@ -230,74 +248,9 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
 .gr_page_err .gr_err {
     display: inherit;
 }
-.gr_item {
-	margin: 30px 0;
-}
-.gr_item li {
-    list-style: none outside none;
-    margin: 5px 0;
-}
-.gr_item ul {
-    margin: 0;
-    padding: 0;
-}
-.gr_item p {
-	padding: 0;
-	line-height: 16px;
-    font-size: 0.8em;
-}
-.gr_item .gr_item_title {
-	margin-top: 0;
-	font-size: 18px;
-	font-weight: bold;
-}
-.gr_item img {
-	width: 100px;
-}
-.gr_item_img_wrap {
-    width: 100px;
-    min-height: 10px;
-    float: left;
-}
-.gr_item .gr_item_details {
-	float: left;
-	width: 450px;
-	text-align: justify;
-}
-.gr_item_details span {
-	float: right;
-}
-.gr_received {
-    margin: 5px 40px 0 0;
-    float: right;
-    font-size: 11px;
-    color: #666;
-}
-.gr_item_filled {
-    clear: right;
-}
-.gr_item_details div {
-	margin: 5px 0 5px 20px;
-}
-.gr_item_details button {
-	margin: 5px 0 35px 0;
-	float: right;
-}
-.gr_item .n {
-	font-weight: bold;
-}
-.gr_item .y {
-	font-weight: bold;
-	color: green;
-}
-.gr_item .clear {
-    clear: both;
-}
 .gr_clear {
     clear: both;
 }
-
-
 #gr_alert {
     position: fixed;
     bottom: 0;
@@ -384,6 +337,27 @@ input.gr_qty {
     background-position: -19px -3px;
 }
 
+
+
+/*** CUSTOM ITEM ***/
+.gr_custom_item {
+    clear: left;
+}
+.gr_custom_item .gr_item_details {
+    margin: 5px 0 5px;
+    padding-left: 20px;
+    float: left;
+    width: 450px;
+}
+.gr_custom_item button {
+    float: right;
+}
+.gr_custom_item .gr_item_img_wrap {
+    float: left;
+}
+.gr_custom_item_form li {
+    overflow: hidden;
+}
 .gr_custom_item input {
     float: right;
     clear: right;
@@ -395,6 +369,9 @@ input.gr_qty {
 #gr_custom_item_price {
     width: 60px;
 }
+
+
+
 .gr_lightbox {
     display: none;
     background-color: #FFF;

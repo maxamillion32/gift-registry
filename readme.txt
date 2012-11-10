@@ -4,7 +4,7 @@ Donate link: http://sliverwareapps.com/registry
 Tags: paypal, wedding, gifts, registry, shower, bridal
 Requires at least: 3.3.1
 Tested up to: 3.4.1
-Stable tag: 1.6.2
+Stable tag: 1.7
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -99,6 +99,9 @@ IPN ERROR - The IPN was received but there was an error processing it. For more 
 Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view screenshots
 
 == Changelog ==
+
+= 1.7 =
+* Added grid layout, additional layout options, and misc bug fixes
 
 = 1.6.2 =
 * Added warning messages for disabled javascript or cookies

@@ -393,5 +393,12 @@ jQuery(document).ready(function ($) {
 
         itemLightbox.trigger('close');
     });
+
+    function customAmountEnabledChanged( e ) {
+        $('#gr_custom_item_position').attr('disabled', $('#gr_custom_amount_enabled').val() != 'y');
+    }
+
+    $('#gr_custom_amount_enabled').bind('change', customAmountEnabledChanged);
+    customAmountEnabledChanged();
 });
 

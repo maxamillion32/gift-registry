@@ -42,6 +42,20 @@ jQuery(document).ready(function ($) {
         addItemComplete( e );
     });
 
+    $('.gr-descr-hover').click( function( e ) {
+        var descr = $('.gr_item_descr', $(this).closest('.gr_item_details'));
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        descr.toggle();
+
+        $('body').bind('click', function( e ) {
+            descr.toggle();
+            $(this).unbind( e );
+        });
+    });
+
     function addItemComplete( e ) {
         if ( GR.Data.cartUrl ) {
             document.location = GR.Data.cartUrl;

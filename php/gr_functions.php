@@ -12,7 +12,13 @@ $vconfig = array(
     'auth_status' => array(
         'verified' => '<span class="gr_auth_status gr_verified">Verified</span>',
         'unverified' => '<span class="gr_auth_status gr_not_verified">Not Verified</span>'
-    )
+    ),
+    'ext_comm_warn' => "<p><b><span class='gr_warn' style='color:red;'>WARNING:</span>&nbsp;It appears your hosting provider has disabled
+        both the <a href='http://www.php.net/manual/en/intro.curl.php'>cURL libraries</a> and
+        <a href='http://www.php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen'>allow_url_fopen</a>,
+        which means your site will not be able to communicate with our servers to authenticate. Please reach out to
+        your hosting provider to see if these settings can be changed. If not, please
+        <a href='http://sliverwareapps.com/contact'>contact us</a> and we will do our best to help troubleshoot.</b></p>"
 );
 
 function gr_admin_quick_start() {
@@ -62,10 +68,16 @@ function gr_admin_version_widgets() {
 
     $para = $vconfig['auth_para'][$_key];
     $status = $vconfig['auth_status'][$_key];
+
+    // check to make sure server is configured for external communication
+    $ext_comm_warn = !function_exists('curl_init') && !ini_get('allow_url_fopen') ? $vconfig['ext_comm_warn'] : '';
     ?>
     <div class='gr-instructions'>
         <h2>Authentication</h2>
-        <div id='gr_auth_para'><?php echo $para; ?></div>
+        <div id='gr_auth_para'>
+            <?php echo $para; ?>
+            <?php echo $ext_comm_warn; ?>
+        </div>
         <form id='gr_auth_form' class='gr-admin-form'>
             <input type='hidden' name='action' value='save_auth_options' />
             <ul>
@@ -85,6 +97,33 @@ function gr_admin_version_widgets() {
                 </li>
             </ul>
         </form>
+    </div>
+
+    <div class='gr-instructions' style='overflow: hidden;'>
+        <h2>Like Our Work?</h2>
+        <p>If you like this plugin, we hope you'll help spread the word.</p>
+        <div class='gr-review'>
+            <a href='http://wordpress.org/extend/plugins/gift-registry/' target='_blank' class='gr-stars'></a>
+        </div>
+        <p>Write a review on <a href='http://wordpress.org/extend/plugins/gift-registry' target='_blank'>wordpress</a>&nbsp;<span class='gr_sub_text'>(preferred)</span></p>
+
+        <div class='gr-share'>
+            <div id="fb-root"></div>
+            <script>(function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) return;
+              js = d.createElement(s); js.id = id;
+              js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=107068776051785";
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
+            <div class="fb-like" data-href="http://sliverwareapps.com/registry" data-send="false" data-layout="box_count" data-width="450" data-show-faces="false" data-font="tahoma"></div>
+        </div>
+
+        <div class='gr-share'>
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://sliverwareapps.com/registry" data-via="" data-lang="en" data-related="anywhereTheJavascriptAPI" data-count="vertical">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+        </div>
+
     </div>
     <?php
 }

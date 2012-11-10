@@ -87,11 +87,13 @@ function gr_links() {
 function gr_admin_registry_options() {
     $list_page_id = get_option('gr_list_page_id');
     $cart_page_id = get_option('gr_cart_page_id');
+    $list_layout = get_option('gr_list_layout');
     $paypal_email = get_option('gr_paypal_email');
     $currency_code = get_option('gr_currency_code');
     $list_url = get_option( 'gr_list_url' );
     $cart_url = get_option( 'gr_cart_url' );
     $custom_amount_enabled = get_option('gr_custom_amount_enabled');
+    $custom_item_position = get_option('gr_custom_item_position');
 
     $cart_options = GiftRegistry::gr_page_options( $cart_page_id );
     $list_options = GiftRegistry::gr_page_options( $list_page_id );
@@ -166,6 +168,18 @@ function gr_admin_registry_options() {
                     </div>
                 </li>
                 <li>
+                    <label for='gr_list_layout'>Wish List Layout</label>
+                    <select id='gr_list_layout' name='gr_list_layout'>
+                        <option value='standard' <?php echo $list_layout == 'standard' ? 'selected' : ''; ?>>Vertical List</option>
+                        <option value='grid' <?php echo $list_layout == 'grid' ? 'selected' : ''; ?>>Grid</option>
+                    </select>
+                    <div class='gr_field_info'>
+                        <div class='gr_help gr_info'>
+                            <p>Choose a layout for your wish list.<p>
+                        </div>
+                    </div>
+                </li>
+                <li>
                     <label for='gr_custom_amount_enabled'>Allow Guests to Enter Custom Gift Amount</label>
                     <select id='gr_custom_amount_enabled' name='gr_custom_amount_enabled'>
                         <option value='n' <?php echo $custom_amount_enabled == 'n' ? "selected" : '' ?>>No</option>
@@ -176,6 +190,20 @@ function gr_admin_registry_options() {
                         <div class='gr_help gr_info'>
                             <p>Enabling this option allows guests to specify a custom gift amount via an item that appears on the registry wish list.<p>
                             <p>They will be able to name the item and add additonal notes during their checkout with PayPal.</p>
+                            <p>Note that the custom gift item will have a different format than the rest of the items if you have selected Grid as your Wish List Layout.</p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <label for='gr_custom_item_position'>Custom Item Position</label>
+                    <select id='gr_custom_item_position' name='gr_custom_item_position'>
+                        <option value='above' <?php echo $custom_item_position == 'above' ? "selected" : '' ?>>Above Wish List</option>
+                        <option value='below' <?php echo $custom_item_position == 'below' ? "selected" : '' ?>>Below Wish List</option>
+                    </select>
+
+                    <div class='gr_field_info'>
+                        <div class='gr_help gr_info'>
+                            <p>Specifies whether the custom amount item will appear above or below the list of wish list items on the wish list page.<p>
                         </div>
                     </div>
                 </li>
