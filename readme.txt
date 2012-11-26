@@ -4,7 +4,7 @@ Donate link: http://sliverwareapps.com/registry
 Tags: paypal, wedding, gifts, registry, shower, bridal
 Requires at least: 3.3.1
 Tested up to: 3.4.1
-Stable tag: 1.7
+Stable tag: 1.7.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -100,6 +100,9 @@ Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view scre
 
 == Changelog ==
 
+= 1.7.1 =
+* Fixes issue where apostrophes in description cause blank items on cart page
+
 = 1.7 =
 * Added grid layout, additional layout options, and misc bug fixes
 
@@ -144,5 +147,6 @@ Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view scre
 
 == Upgrade Notice ==
 
-= 1.3.1.2 =
-Fixes a file reference bug that prevents load of javascript. All users should upgrade immediately.
+= 1.7.1 =
+Fixes issue where apostrophes in description may cause blank items on cart page. All users are advised to update immediately.
+

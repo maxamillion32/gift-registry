@@ -46,8 +46,6 @@ function gr_item_html($item) {
     $gift_button_text = get_option('gr_gift_button_text');
     $list_layout = get_option('gr_list_layout');
 
-    $item_json = json_encode($item);
-
     $fulfilled = "<span class='n'>NO</span>";
     $received = $descr_link = "";
     if ( $item['qty_received'] ) {
@@ -60,15 +58,18 @@ function gr_item_html($item) {
     } 
 
     foreach ($item as $key => $var) {
-        $$key = str_replace('$', '\$', stripslashes($var)); // escape $ because wp processing treats them as variables
+        $$key = str_replace('$', '&#36;', stripslashes($var)); // escape $ because wp processing treats them as variables
+        $json_obj[$key] = $$key;
     }
+
+    $item_json = str_replace("'", "&apos;", json_encode($json_obj) ); // replace apostrophes to enforce valid JSON and make sure data attr isn't ended prematurely
 
     if ( $list_layout == 'grid' && !empty($descr) ) {
         $descr_link = "<a href='#' class='gr-descr-hover'>Details</a>";
     }
 
     $img_url = empty( $img_url ) ? plugins_url('gift-registry/img/custom_gift.jpg') : $img_url;
-    $symbol = str_replace('$', '\$', GRCurrency::symbol());
+    $symbol = str_replace('$', '&#36;', GRCurrency::symbol());
     $html = "<div class='gr_item'>
                 <span class='gr_item_img_wrap'><img class='gr_item_img' src='{$img_url}' alt='' /></span>
                 <div class='gr_item_details'>

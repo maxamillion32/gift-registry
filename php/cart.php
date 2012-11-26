@@ -32,6 +32,13 @@ function gr_cart_html($cart) {
         $i = 1; // because starting at 0 paypal doesn't recognize the cart
         $cartTotal = 0;
         foreach ( $cart->items as $item ) {
+            // detect error parsing JSON, possibly caused by apostrophes
+            if ( empty($item->title) ) {
+                $html = "Oops! There was a problem loading your cart so it has been cleared. Please try re-adding the items to your cart.";
+                $html .= "\r\n<script type='text/javascript'>\r\njQuery(function() { \r\nGR.MyCart.removeAll();\r\nGR.MyCart.save(); \r\n});\r\n</script>";
+                return $html;
+            }
+
             $tot = intval($item->qty) * floatval($item->price);
             $cartTotal += $tot;
 
