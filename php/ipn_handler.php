@@ -19,6 +19,7 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
 */
 
 require_once 'utils.php';
+require_once '../settings.php';
 require_once '../../../../wp-blog-header.php'; // to get wpdb
 
 
@@ -48,11 +49,7 @@ $header = "POST /cgi-bin/webscr HTTP/1.0\r\n";
 $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
 $header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
 
-// If testing on Sandbox use:
-//$fp = fsockopen ('ssl://www.sandbox.paypal.com', 443, $errno, $errstr, 30);
-// Production
-$fp = fsockopen('ssl://ipnpb.paypal.com', 443, $errno, $errstr, 30);
-
+$fp = fsockopen (GR_IPN_URL, 443, $errno, $errstr, 30);
 
 /**
  * assign posted variables to local variables

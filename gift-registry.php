@@ -4,7 +4,7 @@
 Plugin Name: Gift Registry
 Plugin URI: http://sliverwareapps.com/registry/
 Description: A Gift Registry to request and track gifts via PayPal. Ideal for weddings, births, and other occasions.
-Version: v1.3.1.2
+Version: v1.7.1
 Author: sliverwareapps
 Author URI: http://sliverwareapps.com
 License: GPL
@@ -35,14 +35,21 @@ $gr_db_version = "1.0";
 
 require_once dirname(__FILE__) . '/php/admin.php';
 require_once dirname(__FILE__) . '/php/utils.php';
+require_once dirname(__FILE__) . '/php/GRCurrency.php';
+require_once dirname(__FILE__) . '/php/GRAjax.php';
+require_once dirname(__FILE__) . '/settings.php';
 
-define('GR_DEFAULT_LIST_PAGE_TITLE', 'Gift Registry - Wish List');
-define('GR_DEFAULT_CART_PAGE_TITLE', 'Gift Registry - Cart');
 
 
 require_once('php/gr_functions.php');
 
+// TODO: consider adding multiple layout options for list: compact, grid
+// TODO: add check for tables and throw error if they don't exist
 
+/*
+ * TODO: check for conflicts with prettyPhoto script when there are > 2 items in cart, script appears to clobber html content
+ * http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone/
+ */
 
 class GiftRegistry {
     public static function init() {
@@ -54,12 +61,20 @@ class GiftRegistry {
                 'listUrl' => get_option( 'gr_list_url' ),
                 'cartUrl' => get_option( 'gr_cart_url' ),
                 'listLinkText' => get_option( 'gr_list_link_text', 'View Gift Registry Wish List' ),
-                'cartLinkText' => get_option( 'gr_cart_link_text', 'View My Gift Registry Cart' )
+                'cartLinkText' => get_option( 'gr_cart_link_text', 'View My Gift Registry Cart' ),
+                'listLayout' => get_option( 'gr_list_layout', 'standard' ),
+                'currency' => array(
+                    'symbol' => GRCurrency::symbol(),
+                    'code' => get_option('gr_currency_code'),
+                    'name' => GRCurrency::name()
+                ),
+                'customItemPosition' => get_option( 'gr_custom_item_position', 'below' )
             ),
             'Messages' => array(
-                'error' => 'Sorry, an error occurred. Please go to http://sliverwareapps.com/contact for support.',
+                'error' => 'Sorry, an error occurred. Please go to ' . GR_SITE_URL . '/contact for support.',
                 'auth_para' => $vconfig['auth_para'],
-                'auth_status' => $vconfig['auth_status']
+                'auth_status' => $vconfig['auth_status'],
+                'no_cookies' => GR_NO_COOKIES
             )
         );
 
@@ -70,6 +85,7 @@ class GiftRegistry {
         wp_enqueue_script('cart.js', plugins_url('gift-registry/js/cart.js'), array( 'jquery' ));
         wp_localize_script('list.js', 'GR', $data);
         wp_enqueue_style('gr-style', plugins_url('gift-registry/css/registry.css'));
+        wp_enqueue_style('gr-list-layout', plugins_url('gift-registry/css/' . get_option('gr_list_layout') . '.css'));
         wp_enqueue_script('mycart.js', plugins_url('gift-registry/js/mycart.js'), array( 'jquery' ));
 
         register_post_type( 'gr_internal',
@@ -93,14 +109,17 @@ class GiftRegistry {
         $installed_ver = get_option('gr_db_version');
 
         add_option("gr_paypal_email", "");
+        add_option("gr_currency_code", "USD");
         add_option("gr_cart_url", "");
         add_option("gr_list_url", "");
+        add_option("gr_list_layout", "standard");
         add_option("gr_cart_page_id", "");
         add_option("gr_list_page_id", "");
         add_option('gr_list_link_text', 'View Gift Registry Wish List');
         add_option('gr_cart_link_text', 'View My Gift Registry Cart');
         add_option('gr_gift_button_text', 'Gift It!');
         add_option('gr_custom_amount_enabled', 'n');
+        add_option('gr_custom_item_position', 'below');
         add_option('gr_auth_key', '');
         add_option('gr_auth_key_valid', false);
 
@@ -276,192 +295,6 @@ class GiftRegistry {
         }
     }
 
-    /************************/
-    /***** AJAX METHODS *****/
-    /************************/
-
-    public static function save_auth_options() {
-        $auth_key = $_POST['gr_auth_key'];
-        $action = 'authentications/test/' . urlencode($auth_key) . '.json';
-        $query = '?site_url=' . urlencode( site_url() ); 
-
-        $response = gr_api_request($action, $query);
-        $response = json_decode($response);
-
-        if ( !empty($response->authentication) ) {
-            echo json_encode( array(
-                'message' => 'Thank you, your authentication key was verified! You may now receive gifts using this plugin'
-            ));
-            update_option('gr_auth_key_valid', true);
-        } else {
-            update_option('gr_auth_key_valid', false);
-            echo json_encode( $response );
-        }
-
-        update_option( 'gr_auth_key', $auth_key );
-        die();
-    }
-
-    public static function save_registry_options() {
-        $cart_page = get_page( $_POST['cart_page_id'] );
-        $list_page = get_page( $_POST['list_page_id'] );
-
-        // verify methods will die and echo json if there's an error
-        GiftRegistry::verify_page_selection($cart_page, 'cart');
-        GiftRegistry::verify_page_selection($list_page, 'list');
-
-        update_option( 'gr_list_page_id', $_POST['list_page_id']);
-        update_option( 'gr_list_url', get_permalink($_POST['list_page_id']) );
-
-        update_option( 'gr_cart_page_id', $_POST['cart_page_id'] );
-        update_option( 'gr_cart_url', get_permalink($_POST['cart_page_id']) );
-
-        if ( !empty($_POST['paypal_email']) ) {
-            update_option('gr_paypal_email', $_POST['paypal_email']);
-        }
-
-        update_option('gr_custom_amount_enabled', $_POST['gr_custom_amount_enabled']);
-
-        echo json_encode( array('statusCode' => 0) );
-        die();
-    }
-
-    public static function save_gr_message_options() {
-        if ( !empty($_POST['list_link_text']) ) {
-            update_option('gr_list_link_text', $_POST['list_link_text']);
-        }
-
-        if ( !empty($_POST['cart_link_text']) ) {
-            update_option('gr_cart_link_text', $_POST['cart_link_text']);
-        }
-
-        if ( !empty($_POST['gift_button_text']) ) {
-            update_option('gr_gift_button_text', $_POST['gift_button_text']);
-        }
-
-        echo json_encode( array('statusCode' => 0) );
-        die();
-    }
-
-    public static function add_registry_item() {
-        global $wpdb; 
-
-        unset($_POST['action']);
-        unset($_POST['current_id']);
-
-        $wpdb->insert( $wpdb->prefix . 'registry_item', $_POST );
-        $registry_item = $_POST;
-        $registry_item['id'] = $wpdb->insert_id;
-
-        echo gr_item_admin_html($registry_item);
-        die(); // required to return a proper ajax result
-    }
-
-    public static function delete_registry_item() {
-        global $wpdb;
-
-        $q = "delete from {$wpdb->prefix}registry_item where id = {$_POST['item_id']}";
-        $wpdb->query($q);
-
-        echo "operation successful";
-        die();
-    }
-
-    public static function get_registry_item() {
-        global $wpdb;
-
-        $q = "select * from {$wpdb->prefix}registry_item where id = {$_GET['item_id']}";
-        $item = $wpdb->get_row($q);
-
-        echo json_encode($item);
-        die();
-    }
-
-    public static function get_order_items() {
-        global $wpdb;
-
-        $q = "select * from {$wpdb->prefix}registry_order_item where order_id = {$_GET['order_id']}";
-        $r = $wpdb->get_results($q, ARRAY_A);
-
-        $html = "<h2>Order Items</h2>";
-        $html .= "<span>Order ID:&nbsp;{$_GET['order_id']}</span>";
-        $html .= "<table class='widefat'><tr><th>Title</th><th>Qty</th><th>Purchase Price</th></tr>";
-
-        if ( count($r) ) {
-            foreach ( $r as $item ) {
-                $html .= "<tr>
-                    <td>{$item['title']}</td>
-                    <td>{$item['qty']}</td>
-                    <td>{$item['purchase_price']}</td>
-                </tr>";
-            }
-        } else {
-            $html .= "<tr><td colspan=3>There are no items for this order</td></tr>";
-        }
-
-        $html .= "</table>";
-
-        echo $html;
-        die();
-    }
-
-    public static function update_registry_item() {
-        global $wpdb; // this is how you get access to the database
-
-        $where = array( 'id' => $_POST['current_id'] );
-
-        unset($_POST['action']);
-        unset($_POST['current_id']);
-
-        $wpdb->update($wpdb->prefix . 'registry_item', $_POST, $where);
-
-        echo "success!";
-        die();
-    }
-
-    public static function prepare_cart() {
-        global $wpdb;
-
-        $cart = json_decode(stripslashes($_COOKIE['GR_MyCart']));
-        $total = 0;
-        if ( !empty($cart->items) ) {
-            foreach ($cart->items as $item) {
-                $total += intval($item->qty) * floatval($item->price);
-            }
-        }
-
-        $order = array(
-            'date_time' => date('Y-m-d h:i:s'),
-            'total_amt' => $total,
-            'status' => 'CREATED'
-        );
-
-        $wpdb->insert( $wpdb->prefix . 'registry_order', $order );
-        $order_id = $wpdb->insert_id;
-
-        if ( !empty($cart->items) ) {
-            foreach ($cart->items as $item) {
-                // item id will be empty for custom gifts
-                $item_id = empty( $item->id ) ? null : $item->id;
-
-                $order_item = array(
-                    'order_id' => $order_id,
-                    'reg_item_id' => $item_id,
-                    'title' => $item->title,
-                    'qty' => $item->qty,
-                    'purchase_price' => $item->price
-                );
-
-                $wpdb->insert( $wpdb->prefix . 'registry_order_item', $order_item );
-            }
-        }
-
-        $order['customId'] = $order_id;
-        $order['returnUrl'] = site_url() . '?gr_internal=gift-registry-transaction-complete&customId=' . $order_id;
-        echo json_encode($order);
-        die();
-    }
-
     public static function filterContent($content) {
         if (preg_match('/\[GiftRegistry:(list|cart|paypalResponse|paypalCancelled)\]/', $content, $matches)) {
 
@@ -545,18 +378,13 @@ class GiftRegistry {
         return $r;
     }
 
-    public static function verify_page_selection($page, $type) {
-        if ( !$page || !preg_match("/\[GiftRegistry:$type\]/", $page->post_content) ) {
-            echo json_encode(
-                array(
-                    'err' => 1,
-                    'msg' => "Either the page no longer exists or it does not contain the [GiftRegistry:$type] short code. Changes were not saved.",
-                    'field_name' => $type . "_page_id"
-                )
-            );
-            die();
-        }
+    public static function settings_link($links) {
+        // courtesy http://bavotasan.com/2009/a-settings-link-for-your-wordpress-plugins/
+        $settings_link = '<a href="options-general.php?page=gift-registry-menu">Settings</a>';
+        array_unshift($links, $settings_link);
+        return $links;
     }
+
 }
 
 
@@ -569,18 +397,20 @@ add_action('init', array('GiftRegistry', 'init'));
 add_action('admin_menu', 'gr_plugin_menu');
 add_action('admin_init', 'gr_admin_js');
 
-add_action('wp_ajax_add_registry_item', array('GiftRegistry', 'add_registry_item'));
-add_action('wp_ajax_save_registry_options', array('GiftRegistry', 'save_registry_options'));
-add_action('wp_ajax_save_auth_options', array('GiftRegistry', 'save_auth_options'));
-add_action('wp_ajax_save_gr_message_options', array('GiftRegistry', 'save_gr_message_options'));
-add_action('wp_ajax_delete_registry_item', array('GiftRegistry', 'delete_registry_item'));
-add_action('wp_ajax_get_registry_item', array('GiftRegistry', 'get_registry_item'));
-add_action('wp_ajax_update_registry_item', array('GiftRegistry', 'update_registry_item'));
-add_action('wp_ajax_prepare_cart', array('GiftRegistry', 'prepare_cart'));
-add_action('wp_ajax_get_order_items', array('GiftRegistry', 'get_order_items'));
+add_action('wp_ajax_add_registry_item', array('GRAjax', 'add_registry_item'));
+add_action('wp_ajax_save_registry_options', array('GRAjax', 'save_registry_options'));
+add_action('wp_ajax_save_auth_options', array('GRAjax', 'save_auth_options'));
+add_action('wp_ajax_save_gr_message_options', array('GRAjax', 'save_gr_message_options'));
+add_action('wp_ajax_delete_registry_item', array('GRAjax', 'delete_registry_item'));
+add_action('wp_ajax_get_registry_item', array('GRAjax', 'get_registry_item'));
+add_action('wp_ajax_update_registry_item', array('GRAjax', 'update_registry_item'));
+add_action('wp_ajax_prepare_cart', array('GRAjax', 'prepare_cart'));
+add_action('wp_ajax_get_order_items', array('GRAjax', 'get_order_items'));
+
+// add settings link to plugins page
+add_filter("plugin_action_links_" . plugin_basename(__FILE__), array('GiftRegistry', 'settings_link' ));
 
 add_filter('the_content', array('GiftRegistry', 'filterContent'));
-
 
 function tl_save_error() {
     file_put_contents( dirname(__FILE__) . '/install-log.html' , ob_get_contents() );

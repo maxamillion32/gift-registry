@@ -48,7 +48,7 @@ function gr_options() {
     gr_admin_registry_item_list();
     gr_admin_order_list();
 
-    echo "<div id='gr_lightbox'></div>";
+    echo "<div id='gr_lightbox' class='gr_lightbox'></div>";
     echo '</div>';
     echo '</div>';
 }
@@ -70,6 +70,7 @@ function gr_admin_registry_instructions() {
 
 function gr_links() {
     $hide = empty($_COOKIE['GR_quick_start_state']) || $_COOKIE['GR_quick_start_state'] != 'hidden' ? 'Hide' : 'Show';
+    $log = plugins_url('gift-registry/php/log');
     ?>
     <div class='gr-instructions'>
         <h2>Links</h2>
@@ -77,8 +78,8 @@ function gr_links() {
             <li><a id='gr_show_quick_start' class='gr_quick_start_toggle' href='#'><?php echo $hide; ?>&nbsp;Quick Start</a></li>
             <li><a href='http://sliverwareapps.com/registry/' target=_blank>Documentation</a></li>
             <li><a href='http://sliverwareapps.com/registry/#faq'>FAQ</a></li>
+            <li><a href='<?php echo $log; ?>' target='_blank'>Application Log</a></li>
         </ul>
-
     </div>
     <?php
 }
@@ -86,8 +87,13 @@ function gr_links() {
 function gr_admin_registry_options() {
     $list_page_id = get_option('gr_list_page_id');
     $cart_page_id = get_option('gr_cart_page_id');
+    $list_layout = get_option('gr_list_layout');
     $paypal_email = get_option('gr_paypal_email');
+    $currency_code = get_option('gr_currency_code');
+    $list_url = get_option( 'gr_list_url' );
+    $cart_url = get_option( 'gr_cart_url' );
     $custom_amount_enabled = get_option('gr_custom_amount_enabled');
+    $custom_item_position = get_option('gr_custom_item_position');
 
     $cart_options = GiftRegistry::gr_page_options( $cart_page_id );
     $list_options = GiftRegistry::gr_page_options( $list_page_id );
@@ -113,9 +119,16 @@ function gr_admin_registry_options() {
             <ul>
                 <li>
                     <label for='paypal_email'>PayPal Email Address</label>
-                    <input type='text' id='paypal_email' name='paypal_email' value='<?php echo $paypal_email; ?>' />
+                    <input type='text' id='paypal_email' name='paypal_email' value='<?php echo $paypal_email; ?>'></input>
                     <div class='gr_field_info'>
                         <div class='gr_help gr_info'><p>To enable people to send you payments, enter the email address associated with your PayPal account.</p><p>Please note that this plugin will not distribute this information in any way.</p></div>
+                    </div>
+                </li>
+                <li>
+                    <label for='currency_code'>Currency</label>
+                    <?php echo GRCurrency::select_input_html($currency_code); ?>
+                    <div class='gr_field_info'>
+                        <div class='gr_help gr_info'><p>Select the currency to use with your Gift Registry.</p><p>It is recommended that you use the currency associated with your PayPal account, although PayPal supports automatic currency conversion for guests who wish to pay in different currencies.</p></div>
                     </div>
                 </li>
                 <li <?php echo $list_error ? "class='gr_page_err'" : ''; ?>'>
@@ -123,6 +136,7 @@ function gr_admin_registry_options() {
                     <select name='list_page_id' id='list_page_id_select'>
                         <?php echo $list_options; ?>
                     </select>
+                    <a class='gr_opt_link' href='<?php echo $list_url; ?>' target='_blank'>View</a>
                     <div class='gr_field_info'>
                         <div class='gr_help gr_info'>
                             <p>Select the page that contains the [GiftRegistry:list] short code.</p>
@@ -140,6 +154,7 @@ function gr_admin_registry_options() {
                     <select name='cart_page_id' id='cart_page_id_select'>
                         <?php echo $cart_options; ?>
                     </select>
+                    <a class='gr_opt_link' href='<?php echo $cart_url; ?>' target='_blank'>View</a>
                     <div class='gr_field_info'>
                         <div class='gr_help gr_info'>
                             <p>Select the page that contains the [GiftRegistry:cart] short code.</p>
@@ -149,6 +164,18 @@ function gr_admin_registry_options() {
                             <p>An error has been detected with your configuration</p>
                             <p>Make sure that you have selected a page the contains the [GiftRegistry:cart] short code.</p>
                             <p>Note that this page should have been created for you when the plugin was installed, but it's possible it has been inadvertently modified.</p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <label for='gr_list_layout'>Wish List Layout</label>
+                    <select id='gr_list_layout' name='gr_list_layout'>
+                        <option value='standard' <?php echo $list_layout == 'standard' ? 'selected' : ''; ?>>Vertical List</option>
+                        <option value='grid' <?php echo $list_layout == 'grid' ? 'selected' : ''; ?>>Grid</option>
+                    </select>
+                    <div class='gr_field_info'>
+                        <div class='gr_help gr_info'>
+                            <p>Choose a layout for your wish list.<p>
                         </div>
                     </div>
                 </li>
@@ -163,10 +190,27 @@ function gr_admin_registry_options() {
                         <div class='gr_help gr_info'>
                             <p>Enabling this option allows guests to specify a custom gift amount via an item that appears on the registry wish list.<p>
                             <p>They will be able to name the item and add additonal notes during their checkout with PayPal.</p>
+                            <p>Note that the custom gift item will have a different format than the rest of the items if you have selected Grid as your Wish List Layout.</p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <label for='gr_custom_item_position'>Custom Item Position</label>
+                    <select id='gr_custom_item_position' name='gr_custom_item_position'>
+                        <option value='above' <?php echo $custom_item_position == 'above' ? "selected" : '' ?>>Above Wish List</option>
+                        <option value='below' <?php echo $custom_item_position == 'below' ? "selected" : '' ?>>Below Wish List</option>
+                    </select>
+
+                    <div class='gr_field_info'>
+                        <div class='gr_help gr_info'>
+                            <p>Specifies whether the custom amount item will appear above or below the list of wish list items on the wish list page.<p>
                         </div>
                     </div>
                 </li>
                 <li class='buttons'>
+                    <div class='loading_icon'>
+                        <img src='<?php echo  plugins_url('gift-registry/img/ajax-loader-med.gif'); ?>' alt='loading...' />
+                    </div>
                     <input type='button' class='button-primary' id='save_options_btn' value='Save' />
                 </li>
             </ul>
@@ -210,6 +254,9 @@ function gr_admin_messages_form() {
                     </div>
                 </li>
                 <li class='buttons'>
+                    <div class='loading_icon'>
+                        <img src='<?php echo  plugins_url('gift-registry/img/ajax-loader-med.gif'); ?>' alt='loading...' />
+                    </div>
                     <input type='button' class='button-primary' id='save_messages_btn' value='Save' />
                 </li>
             </ul>
@@ -220,7 +267,8 @@ function gr_admin_messages_form() {
 
 function gr_admin_registry_item_form() { ?>
 <img id='gr-img-preload' />
-<div class='gr-add-item-form gr-admin-form'>
+<div id='gr_item_lightbox' class='gr-admin-form gr-admin-wrap gr_lightbox'>
+    <a class='gr_close'>Close</a>
     <h2 id='gr_item_form_title'>Add a Registry Item</h2>
     <form id='registry_item_form'>
         <input type='hidden' name='action' value='add_registry_item' />
@@ -276,6 +324,9 @@ function gr_admin_registry_item_form() { ?>
                 </div>
             </li>
             <li class='buttons'>
+                <div class='loading_icon'>
+                    <img src='<?php echo  plugins_url('gift-registry/img/ajax-loader-med.gif'); ?>' alt='loading...' />
+                </div>
                 <input type='submit' class='button-primary' id='save_item_btn' value='Add Item' />
                 <input type='button' class='button-primary' id='clear_item_btn' value='Clear Form' />
             </li>
@@ -290,24 +341,29 @@ function gr_admin_registry_item_list() {
 
 ?>
 <h2>Your Registry Items</h2>
-<table id='registry_items' class='widefat'>
-    <tr><th>Title</th><th>Qty Requested</th><th>Qty Received</th><th>Each ($)</th></tr>
-    <?php
-        if ( count($itemList) > 0 ) {
-            foreach ($itemList as $registry_item) {
-                echo gr_item_admin_html($registry_item);
+<div class='gr-admin-form gr-admin-wrap'>
+    <table id='registry_items' class='widefat'>
+        <tr><th>Title</th><th>Qty Requested</th><th>Qty Received</th><th>Each (<span id='item_currency_symbol'><?php echo GRCurrency::symbol(); ?></span>)</th></tr>
+        <?php
+            if ( count($itemList) > 0 ) {
+                foreach ($itemList as $registry_item) {
+                    echo gr_item_admin_html($registry_item);
+                }
+            } else {
+                $html = "<tr class='gr_info'><td colspan=4>You have not added any items to your registry list. Get started by using the Add Registry Item form above!</td></tr>";
+                echo $html;
             }
-        } else {
-            $html = "<tr class='gr_info'><td colspan=4>You have not added any items to your registry list. Get started by using the Add Registry Item form above!</td></tr>";
-            echo $html;
-        }
-    ?>
-</table>
+        ?>
+    </table>
+    <div class='buttons buttons_wide'>
+        <input id='gr_add_items_btn' class='button-primary' type='button' value='Add Items'>
+    </div>
+</div>
 <?php
 }
 
 function gr_item_admin_html($item) {
-    $price = number_format($item['price'], 2);
+    $price = number_format(floatval($item['price']), 2);
     $received = !empty($item['qty_received']) ? $item['qty_received'] : 0;
 
     return <<<HTML
@@ -333,14 +389,17 @@ function gr_admin_order_list() {
     $r = $wpdb->get_results($q, ARRAY_A);
 
     ?>
-<h2>Gifts Received</h2>
-<table id='registry_orders' class='widefat'>
-    <tr><th>ID</th><th>Status</th><th>Date</th><th>From</th><th>Total</th><th>Fees</th><th></th></tr>
-    <?php
-        foreach ($r as $order) {
-            echo gr_order_html($order);
-        }
-    ?>
+<div class='gr-admin-form gr-admin-wrap'>
+    <h2>Gifts Received</h2>
+    <table id='registry_orders' class='widefat'>
+        <tr><th>ID</th><th>Status</th><th>Date</th><th>From</th><th>Total</th><th>Fees</th><th></th></tr>
+        <?php
+            foreach ($r as $order) {
+                echo gr_order_html($order);
+            }
+        ?>
+    </table>
+</div>
 <?php
 }
 
