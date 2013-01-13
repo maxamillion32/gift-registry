@@ -4,7 +4,7 @@ Donate link: http://sliverwareapps.com/registry
 Tags: paypal, wedding, gifts, registry, shower, bridal
 Requires at least: 3.3.1
 Tested up to: 3.4.1
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -70,7 +70,7 @@ Please note that you MUST configure your PayPal settings as described above or y
 == Frequently Asked Questions ==
 
 = What versions of WordPress are compatible with this plugin? =
-The WordPress Gift Registry Plugin has been verified with WordPress versions 3.3.1 – 3.4.1, but we’re not aware of
+The WordPress Gift Registry Plugin has been verified with WordPress versions 3.3.1 – 3.5, but we’re not aware of
 issues with any other versions. If you find any, please let us know.
 
 = On the Admin page, nothing seems to happen when I click a button, I can’t save my PayPal address or URLs, and/or I get redirected to the General Settings page when I try to save =
@@ -82,9 +82,16 @@ problems. Stuck? Send us the error via http://sliverwareapps.com/contact and we�
 Most likely because you haven’t configured your PayPal account to use IPN Notifications. To check the status of an
 individual transaction, log in to PayPal and go to My Account > History > IPN History.
 
+= Why aren't my IPN's working? =
+Check your IPN history in PayPal by going to My Account > History > IPN History, and open the IPN by clicking the Message ID link.
+If the HTTP Response Code is 404, the IPN notification URL in your PayPal settings is incorrect. Double-check that you have configured your IPN URL correctly in PayPal.
+If the HTTP Response Code is 200, the IPN was received by your site but may not have completed correctly. Check the log file at php/log for more information.
+
+Prior to version 1.7.2, a bug prevented gifts from non-logged-in guests from reaching the COMPLETED status. [This can be fixed](http://sliverwareapps.com/ipn-bug-fixed-in-gift-registry-plugin-v1-7-2/)
+
 = Are there any known conflicts with other plugins? =
 The only conflict we are aware of causes the cart page not to render when there are more than 2 items in your cart.
-Check to make sure the 'prettyPhoto' script is disabled if your theme supports it. 
+Check to make sure the 'prettyPhoto' script is disabled if your theme supports it.
 
 = What do the different Gift Statuses mean? =
 CREATED - The shopper began the checkout process but did not complete it.
@@ -99,6 +106,9 @@ IPN ERROR - The IPN was received but there was an error processing it. For more 
 Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view screenshots
 
 == Changelog ==
+
+= 1.7.2 =
+* Fixes issue where IPNs for gifts from non-logged-in users may not complete
 
 = 1.7.1 =
 * Fixes issue where apostrophes in description cause blank items on cart page
@@ -147,6 +157,6 @@ Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view scre
 
 == Upgrade Notice ==
 
-= 1.7.1 =
-Fixes issue where apostrophes in description may cause blank items on cart page. All users are advised to update immediately.
+= 1.7.2 =
+Fixes issue that may prevent gifts from logged-out guests from completing
 

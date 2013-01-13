@@ -4,7 +4,7 @@
 Plugin Name: Gift Registry
 Plugin URI: http://sliverwareapps.com/registry/
 Description: A Gift Registry to request and track gifts via PayPal. Ideal for weddings, births, and other occasions.
-Version: v1.7.1
+Version: v1.7.2
 Author: sliverwareapps
 Author URI: http://sliverwareapps.com
 License: GPL
@@ -45,6 +45,8 @@ require_once('php/gr_functions.php');
 
 // TODO: consider adding multiple layout options for list: compact, grid
 // TODO: add check for tables and throw error if they don't exist
+// TODO: (+2) consider adding option for visitors to indicate an item has been purchased
+
 
 /*
  * TODO: check for conflicts with prettyPhoto script when there are > 2 items in cart, script appears to clobber html content
@@ -397,19 +399,23 @@ add_action('init', array('GiftRegistry', 'init'));
 add_action('admin_menu', 'gr_plugin_menu');
 add_action('admin_init', 'gr_admin_js');
 
-add_action('wp_ajax_add_registry_item', array('GRAjax', 'add_registry_item'));
-add_action('wp_ajax_save_registry_options', array('GRAjax', 'save_registry_options'));
-add_action('wp_ajax_save_auth_options', array('GRAjax', 'save_auth_options'));
-add_action('wp_ajax_save_gr_message_options', array('GRAjax', 'save_gr_message_options'));
-add_action('wp_ajax_delete_registry_item', array('GRAjax', 'delete_registry_item'));
-add_action('wp_ajax_get_registry_item', array('GRAjax', 'get_registry_item'));
-add_action('wp_ajax_update_registry_item', array('GRAjax', 'update_registry_item'));
-add_action('wp_ajax_prepare_cart', array('GRAjax', 'prepare_cart'));
-add_action('wp_ajax_get_order_items', array('GRAjax', 'get_order_items'));
+if ( is_admin() ) {
+    add_action('wp_ajax_add_registry_item', array('GRAjax', 'add_registry_item'));
+    add_action('wp_ajax_save_registry_options', array('GRAjax', 'save_registry_options'));
+    add_action('wp_ajax_save_auth_options', array('GRAjax', 'save_auth_options'));
+    add_action('wp_ajax_save_gr_message_options', array('GRAjax', 'save_gr_message_options'));
+    add_action('wp_ajax_delete_registry_item', array('GRAjax', 'delete_registry_item'));
+    add_action('wp_ajax_update_registry_item', array('GRAjax', 'update_registry_item'));
+    add_action('wp_ajax_get_registry_item', array('GRAjax', 'get_registry_item'));
+    add_action('wp_ajax_get_order_items', array('GRAjax', 'get_order_items'));
+}
+
+add_action('wp_ajax_nopriv_prepare_cart', array('GRAjax', 'prepare_cart'));
+
+
 
 // add settings link to plugins page
 add_filter("plugin_action_links_" . plugin_basename(__FILE__), array('GiftRegistry', 'settings_link' ));
-
 add_filter('the_content', array('GiftRegistry', 'filterContent'));
 
 function tl_save_error() {
