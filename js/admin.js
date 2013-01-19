@@ -20,6 +20,7 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
 jQuery(document).ready(function ($) {
 	/* You can safely use $ in this code block to reference jQuery */
     var itemForm = $('#registry_item_form'),
+        itemLightbox = $('#gr_item_lightbox'),
         placeholder_img = $('#img-preview').attr('src');
 
         jQuery.validator.addMethod("price", function(value, element) {
@@ -34,6 +35,8 @@ jQuery(document).ready(function ($) {
         submitHandler: function(form) { // fires when form is valid
             var callback = $( 'input[name="action"]', $(form) ).val() == 'add_registry_item' ? addItemCallback : updateItemCallback,
 		        imgErr = $('.gr-img-preview .gr-error');
+
+            $( form ).addClass( 'loading' );
 
             if ( imgErr[0] ) {
                 $('#img_url').select();
@@ -51,7 +54,7 @@ jQuery(document).ready(function ($) {
             descr: { scriptless: true },
             info_url: { url: true },
             img_url: { url: true },
-	    qty_requested: { required: true, min: 1 },
+	        qty_requested: { required: true, min: 1 },
             price: { required: true, price: true }
         }
     });
@@ -62,12 +65,16 @@ jQuery(document).ready(function ($) {
 
     $("#gr_options_form").validate({
         submitHandler: function(form) { // fires when form is valid
+            $( form ).addClass( 'loading' );
+
             $.ajax({
                 type: 'POST',
                 url: GR.Data.ajaxUrl,
                 data: $(form).serialize(),
                 success: function( data ) {
-                    var response = $.parseJSON( data ), err_field;
+                    var response = GR.parseJSON( data ), err_field;
+
+                    $( form ).removeClass( 'loading' );
 
                     if ( response.err ) {
                         err_field = $('[name=' + response.field_name + ']');
@@ -76,24 +83,28 @@ jQuery(document).ready(function ($) {
                         GR.Alert(response.msg, { error: true });
                     } else {
                         $('li.gr_page_err').removeClass('gr_page_err');
-                        
+                        $('#item_currency_symbol').html( response.currency.symbol );
+
                         GR.Alert("Options saved successfully");
                     }
                 }
             });
         },
         rules: {
-            paypal_email: { required: true, email: true },
+            paypal_email: { required: true, email: true }
         }
     });
 
     $("#gr_messages_form").validate({
         submitHandler: function(form) { // fires when form is valid
+            $( form ).addClass( 'loading' );
+
             $.ajax({
                 type: 'POST',
                 url: GR.Data.ajaxUrl,
                 data: $(form).serialize(),
                 success: function( data ) {
+                    $( form ).removeClass( 'loading' );
                     GR.Alert("Message options saved successfully");
                 }
             });
@@ -112,7 +123,7 @@ jQuery(document).ready(function ($) {
                 url: GR.Data.ajaxUrl,
                 data: $(form).serialize(),
                 success: function( data ) {
-                    var response = $.parseJSON( data ),
+                    var response = GR.parseJSON( data ),
                         _key;
 
                     $('#gr_auth_form').removeClass('loading');
@@ -146,12 +157,14 @@ jQuery(document).ready(function ($) {
     function addItemCallback( data ) {
         var title = $('#title').val();
 
+        $( '#registry_item_form' ).removeClass( 'loading' );
+
         $('#registry_items tr.gr_info').remove();
         $('#registry_items').append( data );
         itemForm[0].reset();
-	$('#descr').text('');
+        $('#descr').text('');
 
-	resetPlaceholderImage();
+        resetPlaceholderImage();
 
         $('#registry_items tr span.delete a').click( deleteItem );
         $('#registry_items tr span.edit a').click( editItem );
@@ -164,14 +177,11 @@ jQuery(document).ready(function ($) {
         var itemRow = $('#item_row_' + itemForm[0].current_id.value),
             title = $('#title').val();
 
-        $('#gr_item_form_title').html("Add A Registry Item");
         $('.gr_item_title', itemRow).html( title );
         $('.gr_item_qty_req', itemRow).html( $('#qty_requested').val() );
-        $('.gr_item_price', itemRow).html( $('#price').val() );
+        $('.gr_item_price', itemRow).html( $('#price').val().replace('$', '') );
 
-        itemForm[0].reset();
-        $('#descr').text('');
-
+        clearItemForm();
         resetPlaceholderImage();
 
         GR.Alert("'" + title + "' has been successfully updated");
@@ -231,7 +241,8 @@ jQuery(document).ready(function ($) {
             url: GR.Data.ajaxUrl,
             data: data,
             success: function( data ) {
-                var item = $.parseJSON( data );
+                var item = GR.parseJSON( data );
+
                 GR.FormMap.map(item);
                 $('#gr_item_form_title').html("Editing '" + item.title + "'");
                 $('#save_item_btn').val('Update Item');
@@ -239,9 +250,13 @@ jQuery(document).ready(function ($) {
                 $('#registry_item_form input[name="current_id"]').val(item.id);
 
                 setThumbnail( item.img_url );
-
-                itemForm.addClass('editing');
-                $('#title').select();
+                itemLightbox.lightbox_me( {
+                    centered: true,
+                    onLoad: function() {
+                        itemForm.addClass('editing');
+                        $('#title').select();
+                    }
+                } );
             }
         });
 
@@ -251,10 +266,10 @@ jQuery(document).ready(function ($) {
 
     $('#registry_items tr span.edit a').click( editItem );
 
-    $('#clear_item_btn').click(function() {
+    function clearItemForm() {
         itemForm[0].reset();
-	$('#descr').text('');
-        itemForm.removeClass('editing');
+	    $('#descr').text('');
+        itemForm.removeClass('editing').removeClass('loading');
 
         $('#gr_item_form_title').html("Add A Registry Item");
         $('#save_item_btn').val('Add Item');
@@ -264,7 +279,9 @@ jQuery(document).ready(function ($) {
         var imgHtml = '<img src="' + placeholder_img + '" height="75px" width="115px" />';
         $('#img-preview-wrap').html(imgHtml);
         $('.gr-img-preview').removeClass('populated');
-    });
+    }
+
+    $('#clear_item_btn').click( clearItemForm );
 
     function setThumbnail(url) {
         var imgPreview = $('#img-preview-wrap'),
@@ -356,5 +373,32 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
         e.stopPropagation();
     });
+
+    $('#gr_add_items_btn').click(function( e ) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        clearItemForm();
+        itemLightbox.lightbox_me({
+            centered: true,
+            onLoad: function() {
+                $('#title').select();
+            }
+        });
+    });
+
+    $('.gr_close').click(function( e ) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        itemLightbox.trigger('close');
+    });
+
+    function customAmountEnabledChanged( e ) {
+        $('#gr_custom_item_position').attr('disabled', $('#gr_custom_amount_enabled').val() != 'y');
+    }
+
+    $('#gr_custom_amount_enabled').bind('change', customAmountEnabledChanged);
+    customAmountEnabledChanged();
 });
 

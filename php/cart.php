@@ -19,11 +19,12 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
 */
 
 function gr_cart_html($cart) {
-    $html = "<div id='gr_cart_wrap'><h2>Your Registry Cart</h2>";
+    $html = "<div id='gr_warn_settings'><noscript>" . GR_NO_SCRIPT . "</noscript></div>";
+
+    $html .= "<div id='gr_cart_wrap'><h2>Your Registry Cart</h2>";
     $html .= "<div class='gr_clear_wrap'>";
 
-//    $html .= "<form id='gr_cart_form' action='https://www.sandbox.paypal.com/cgi-bin/webscr' method='post'>";
-    $html .= "<form id='gr_cart_form' action='https://www.paypal.com/cgi-bin/webscr' method='post'>";
+    $html .= "<form id='gr_cart_form' action='" . GR_PAYPAL_URL . "/cgi-bin/webscr' method='post'>";
     $html .= "<table id='gr_cart_tbl'>";
     $html .= "<tr><th>Item Name</th><th>Qty</th><th>Each</th><th>Total</th><th></th></tr>";
 
@@ -31,18 +32,25 @@ function gr_cart_html($cart) {
         $i = 1; // because starting at 0 paypal doesn't recognize the cart
         $cartTotal = 0;
         foreach ( $cart->items as $item ) {
+            // detect error parsing JSON, possibly caused by apostrophes
+            if ( empty($item->title) ) {
+                $html = "Oops! There was a problem loading your cart so it has been cleared. Please try re-adding the items to your cart.";
+                $html .= "\r\n<script type='text/javascript'>\r\njQuery(function() { \r\nGR.MyCart.removeAll();\r\nGR.MyCart.save(); \r\n});\r\n</script>";
+                return $html;
+            }
+
             $tot = intval($item->qty) * floatval($item->price);
             $cartTotal += $tot;
 
-            $each = '\$' . number_format(floatval($item->price), 2);
-            $totalStr = '\$' . number_format($tot, 2);
+            $each = str_replace('$', '\$', GRCurrency::symbol() . number_format(floatval($item->price), 2));
+            $totalStr = str_replace('$', '\$', GRCurrency::symbol() . number_format($tot, 2));
             $item->title = str_replace('$', '\$', $item->title);
             $plus_minus = "<span class='gr_incr_wrap'><span class='gr_incr gr_plus'></span><span class='gr_incr gr_minus'></span></span>";
 
             $html .= "<tr class='gr_cart_item' data-item_id='$i'>";
-            $html .= "<td>{$item->title}</td>";
+            $html .= "<td>" . $item->title . "</td>";
             $html .= "<td><input type='number' class='gr_qty' name='quantity_$i' value={$item->qty} />$plus_minus</td>";
-            $html .= "<td class='gr_each'>$each</td>";
+            $html .= "<td class='gr_each'>" . $each . "</td>";
             $html .= "<td class='gr_tot'>$totalStr</td>";
             $html .= "<td><a href='#' class='gr_delete'>Remove</a></td>";
             $html .= "</tr>";
@@ -50,15 +58,15 @@ function gr_cart_html($cart) {
             $i++;
         }
 
-        $cartTotal = '\$' . number_format($cartTotal, 2);
+        $cartTotal = str_replace('$', '\$', GRCurrency::symbol() . number_format($cartTotal, 2));
 
     } else {
         $html .= "<tr class='cart_empty'><td colspan='5'>Your Cart Is Empty</td></tr>";
 
-        $cartTotal = '\$' . number_format(0, 2);
+        $cartTotal = str_replace('$', '\$', GRCurrency::symbol() . number_format(0, 2));
     }
 
-    $html .= "<tr class='gr_cart_summary'><td>Cart Total</td><td></td><td></td><td><span id='gr_cart_total'>$cartTotal</span></td><td></td></tr>";
+    $html .= "<tr class='gr_cart_summary'><td>Cart Total</td><td></td><td></td><td><span id='gr_cart_total'>" . $cartTotal . "</span></td><td></td></tr>";
     $html .= "</table>";
 
     $html .= gr_button_html(); // from gr_functions.php

@@ -20,13 +20,13 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
 
 function gr_handle_paypal_response() {
     global $wpdb;
-    
+
     wp_enqueue_script('paypal_response.js', plugins_url('gift-registry/js/paypal_response.js'), array( 'jquery' ));
     $customId = mysql_real_escape_string($_GET['customId']);
 
     $q = "update {$wpdb->prefix}registry_order set
         status = 'RECEIVED'
-        where id = '$customId'";
+        where id = '$customId' and status != 'COMPLETED'";
     $wpdb->query($q);
 
     $html = "<p>Thank you for your gift!</p>";
