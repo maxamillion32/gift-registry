@@ -4,7 +4,7 @@ Donate link: http://sliverwareapps.com/registry
 Tags: paypal, wedding, gifts, registry, shower, bridal
 Requires at least: 3.3.1
 Tested up to: 3.4.1
-Stable tag: 1.7.2
+Stable tag: 1.7.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -107,6 +107,9 @@ Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view scre
 
 == Changelog ==
 
+= 1.7.3 =
+* Fixes issue where IPNs for gifts from logged-in guests may not complete (we promise)
+
 = 1.7.2 =
 * Fixes issue where IPNs for gifts from non-logged-in users may not complete
 
@@ -157,6 +160,6 @@ Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view scre
 
 == Upgrade Notice ==
 
-= 1.7.2 =
-Fixes issue that may prevent gifts from logged-out guests from completing
+= 1.7.3 =
+Fixes issue that may prevent gifts from logged-in guests from completing (we promise)
 

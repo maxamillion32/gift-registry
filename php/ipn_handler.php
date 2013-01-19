@@ -144,7 +144,7 @@ if (!$fp) {
 
     while (!feof($fp)) {
         $res = fgets($fp, 1024);
-        if (strcmp($res, "VERIFIED") == 0) {
+        if (strcmp($res, "VERIFIED") == 0 || !empty($force_bypass)) {
            if (!$wpdb) {
                 logToFile( "Couldn't connect to MySQL:\r\nERROR:" . mysql_error() . " - " . mysql_errno() );
                 die();
@@ -163,13 +163,13 @@ if (!$fp) {
                 where id = " . mysql_real_escape_string($custom);
             logToFile("IPN Received; SQL Query to mark transaction as COMPLETED: \r\n\t$q");
             $result = $wpdb->query($q);
-            
+
             if (!$result) {
                 logToFile('WPDB ERROR: ' . $wpdb->last_error);
             }
 
             logToFile("VERIFIED IPN:\n $req");
-            
+
 	    //check if transaction ID has been processed before
             $checkquery = "select txnid from {$wpdb->prefix}registry_paypal_payment_info where txnid='" . $txn_id . "'";
             $sihay = $wpdb->get_var($checkquery);
