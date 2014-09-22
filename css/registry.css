@@ -43,9 +43,6 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
     position: fixed;
     left: 4000px;
 }
-.gr-admin-wrap .widget-liquid-right {
-    width: 500px;
-}
 .gr-admin-wrap .gr_sub_list {
     list-style-type: lower-alpha;
 }
@@ -171,7 +168,7 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
 }
 .gr-admin-form {
     clear: left;
-    margin-right: 510px;
+    /*margin-right: 510px;*/
 }
 .widget-liquid-right .gr-admin-form {
     margin-right: 0;

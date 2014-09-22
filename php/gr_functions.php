@@ -31,7 +31,6 @@ function gr_admin_quick_start() {
         <p>Please note that you <b>MUST</b> configure your PayPal settings as described below or you will not be able to track gifts received.
             <span class='gr_sub_text'>(you will, however, still be able to receive them)</span></p>
         <ol>
-            <li>Purchase an <a href='<?php echo GR_AUTH_SERVER_URL; ?>' target='_blank'>authentication key</a> and enter it into the Authentication form below</li>
             <li>Configure Your PayPal Settings (<b><span style='color:red'>IMPORTANT</span></b>)
                 <ol class='gr_sub_list'>
                     <li>Login to PayPal</li>
@@ -60,45 +59,7 @@ function gr_admin_quick_start() {
 }
 
 function gr_admin_version_widgets() {
-    global $vconfig;
-    $auth_key = get_option('gr_auth_key');
-    $valid = get_option('gr_auth_key_valid');
-
-    $_key = $valid ? 'verified' : 'unverified';
-
-    $para = $vconfig['auth_para'][$_key];
-    $status = $vconfig['auth_status'][$_key];
-
-    // check to make sure server is configured for external communication
-    $ext_comm_warn = !function_exists('curl_init') && !ini_get('allow_url_fopen') ? $vconfig['ext_comm_warn'] : '';
     ?>
-    <div class='gr-instructions'>
-        <h2>Authentication</h2>
-        <div id='gr_auth_para'>
-            <?php echo $para; ?>
-            <?php echo $ext_comm_warn; ?>
-        </div>
-        <form id='gr_auth_form' class='gr-admin-form'>
-            <input type='hidden' name='action' value='save_auth_options' />
-            <ul>
-                <li>
-                    <label for=''>Authentication Status</label>
-                    <span id='gr_auth_status_wrap'><?php echo $status; ?></span>
-                </li>
-                <li>
-                <label for='gr_auth_key'>Authentication Key</label>
-                <input type='text' id='gr_auth_key' name='gr_auth_key' value='<?php echo $auth_key; ?>' />
-                </li>
-                <li class='buttons'>
-                    <div class='loading_icon'>
-                        <img src='<?php echo  plugins_url('gift-registry/img/ajax-loader-med.gif'); ?>' alt='loading...' />
-                    </div>
-                    <input type='button' class='button-primary' id='save_auth_btn' value='Save' />
-                </li>
-            </ul>
-        </form>
-    </div>
-
     <div class='gr-instructions' style='overflow: hidden;'>
         <h2>Like Our Work?</h2>
         <p>If you like this plugin, we hope you'll help spread the word.</p>
@@ -130,32 +91,14 @@ function gr_admin_version_widgets() {
 
 
 function gr_button_html() {
-    $html = '';
-    $auth_key = get_option('gr_auth_key');
     $site_url = site_url();
-    $dev_site = preg_match("~^https?://(localhost|127\.0\.0\.1)/~", $site_url);
 
-    // code to authenticate with server, which will return generated php
-    if ( $dev_site || ( $auth_key && get_option('gr_auth_key_valid') ) ) {
-        $action = 'authentications/verify/' . urlencode( $auth_key ) . '.json';
-        $query = '?site_url=' . urlencode( $site_url );
-        $query .= '&paypal_email=' . urlencode( get_option('gr_paypal_email') );
-        $query .= '&currency_code=' . urlencode( get_option('gr_currency_code') );
-
-        $response = gr_api_request($action, $query);
-        $response = json_decode($response);
-
-        if ( !empty($response->button_html) ) {
-            $html = str_replace( 'BUTTON_SRC', plugins_url($response->button_src), $response->button_html);
-        }
-    }
-
-    if ( !$html ) {
-        $html .= "<a class='gr_free_trial_button' href='" . GR_AUTH_SERVER_URL . "' target=_blank>
-                    <span class='gr_ft_text'>Register This Plugin</span>
-                </a>
-                <p class='gr_trial_msg'>This is a trial installation of the <a target='blank' href='" . GR_SITE_URL ."/registry/'>WordPress Gift Registry plugin</a>. Click this button to purchase the plugin and enable checkout with PayPal.</p>";
-    }
+    $html = '<input type="hidden" name="return" value="">' .
+    '<input type="hidden" name="business" value="'. get_option('gr_paypal_email') .'">' .
+    '<input type="hidden" name="currency_code" value="'. get_option('gr_currency_code') .'">' .
+    '<input type="hidden" name="cmd" value="_cart">' .
+    '<input type="hidden" name="upload" value="1">' .
+    '<img id="gr_checkout" src="' . $site_url . '/wp-content/plugins/gift-registry/img/paypal_checkout_EN.png" alt="Check Out With PayPal" scale="0">';
 
     return $html;
 }

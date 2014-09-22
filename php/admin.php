@@ -36,12 +36,6 @@ function gr_options() {
     echo '<div class="wrap gr-admin-wrap">';
     echo '<div class="widget-liquid-left">';
 
-    echo "<div class='widget-liquid-right'>";
-    gr_admin_quick_start(); 
-    gr_admin_version_widgets();
-    gr_links();
-    echo "</div>";
-
     gr_admin_registry_options();
     gr_admin_messages_form();
     gr_admin_registry_item_form();
@@ -49,8 +43,15 @@ function gr_options() {
     gr_admin_order_list();
 
     echo "<div id='gr_lightbox' class='gr_lightbox'></div>";
-    echo '</div>';
-    echo '</div>';
+    echo '</div>'; // close widget-liquid-left
+
+    echo "<div class='widget-liquid-right'>";
+    gr_admin_quick_start();
+    gr_admin_version_widgets();
+    gr_links();
+    echo "</div>";
+
+    echo '</div>'; // close gr-admin-wrap
 }
 
 function gr_admin_registry_instructions() {
@@ -109,7 +110,7 @@ function gr_admin_registry_options() {
 
     if ( !$list_page || !preg_match("/\[GiftRegistry:list\]/", $list_page->post_content) ) {
         $list_error = 1;
-    } 
+    }
 
     ?>
     <div class='gr-options-form gr-admin-form'>

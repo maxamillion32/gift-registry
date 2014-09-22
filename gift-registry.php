@@ -4,7 +4,7 @@
 Plugin Name: Gift Registry
 Plugin URI: http://sliverwareapps.com/registry/
 Description: A Gift Registry to request and track gifts via PayPal. Ideal for weddings, births, and other occasions.
-Version: v1.7.3
+Version: v2.0
 Author: sliverwareapps
 Author URI: http://sliverwareapps.com
 License: GPL

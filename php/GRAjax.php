@@ -20,28 +20,6 @@ along with WordPress Gift Registry Plugin.  If not, see <http://www.gnu.org/lice
 
 class GRAjax {
 
-    public static function save_auth_options() {
-        $auth_key = $_POST['gr_auth_key'];
-        $action = 'authentications/test/' . urlencode($auth_key) . '.json';
-        $query = '?site_url=' . urlencode( site_url() );
-
-        $response = gr_api_request($action, $query);
-        $response = json_decode($response);
-
-        if ( !empty($response->authentication) ) {
-            echo json_encode( array(
-                'message' => 'Thank you, your authentication key was verified! You may now receive gifts using this plugin'
-            ));
-            update_option('gr_auth_key_valid', true);
-        } else {
-            update_option('gr_auth_key_valid', false);
-            echo json_encode( $response );
-        }
-
-        update_option( 'gr_auth_key', $auth_key );
-        die();
-    }
-
     public static function save_registry_options() {
         $cart_page = get_page( $_POST['cart_page_id'] );
         $list_page = get_page( $_POST['list_page_id'] );
@@ -64,7 +42,9 @@ class GRAjax {
 
         update_option('gr_currency_code', $_POST['currency_code']);
         update_option('gr_custom_amount_enabled', $_POST['gr_custom_amount_enabled']);
-        update_option('gr_custom_item_position', $_POST['gr_custom_item_position']);
+        if ( isset($_POST['gr_custom_item_position']) ) {
+            update_option('gr_custom_item_position', $_POST['gr_custom_item_position']);
+        }
 
         $currency = array(
             'symbol' => GRCurrency::symbol(),

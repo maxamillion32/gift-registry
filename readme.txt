@@ -1,14 +1,14 @@
 === Plugin Name ===
 Contributors: sliverwareapps
 Donate link: http://sliverwareapps.com/registry
-Tags: paypal, wedding, gifts, registry, shower, bridal
-Requires at least: 3.3.1
-Tested up to: 3.4.1
-Stable tag: 1.7.3
+Tags: paypal, wedding, gifts, registry, shower, bridal, fundraising
+Requires at least: 4.0
+Tested up to: 4.0
+Stable tag: 2.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
-A Gift Registry to request and track gifts via PayPal. Ideal for weddings, births, and other occasions.
+A Gift Registry to request and track gifts via PayPal. Ideal for weddings, births, fundraisers, and other occasions.
 
 == Description ==
 
@@ -20,8 +20,7 @@ advantages over other web-based registries, including:
 * Get notified instantly of gifts via email and keep track of whom gave what
 * Automatically tracks how many wish list items are left outstanding
 * Receive gifts in any of PayPal's [supported currencies](https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_nvp_currency_codes)
-* Free to install and create your wish list
-* Register for $13.95 (plus paypal fees) to receive payments; compare with 8-12% commission from other sites
+* 100% Free!
 
 Please note that only administrators are able to create wish lists - this plugin does not support wish lists for
 multiple users.
@@ -36,6 +35,16 @@ While you may change the quantity requested or price of each item whenever you l
 or price paid for gifts received.
 
 Javascript and cookies must be enabled for this plugin to work correctly.
+
+
+Sept 2014 - UPDATE: A huge THANK YOU to those that have downloaded and used the Gift Registry plugin - I hope that it has
+served you well. Unfortunately I am no longer able to support the plugin for new users as the time has come to turn my
+attention to other pursuits. Accordingly, the plugin has been updated so that it no longer requires the purchase of an
+authorization key to enable use. It is my sincere hope that taking this step will make the plugin more accessible and
+help more individuals and organizations achieve their goals. As a reminder, this plugin (like all WP plugins) is
+open source and I would love nothing more than to see others adopt the code and continue to enhance its capabilities.
+
+Best wishes, and keep creating - Justin
 
 
 
@@ -59,7 +68,6 @@ Javascript and cookies must be enabled for this plugin to work correctly.
         http://yourwebsite.com/wp-content/plugins/gift-registry/php/ipn_handler.php
         And make sure IPN messages are Enabled
 
-* Purchase an Authentication Key for your plugin
 * Test the checkout to make sure it works as expected
 * Receive Gifts (hooray!)
 
@@ -69,9 +77,12 @@ Please note that you MUST configure your PayPal settings as described above or y
 
 == Frequently Asked Questions ==
 
+= Can I use this plugin for my online business to enable registries for multiple customers? =
+Unfortunately not. This plugin is designed to support a single gift registry for a given wordpress site.
+
 = What versions of WordPress are compatible with this plugin? =
-The WordPress Gift Registry Plugin has been verified with WordPress versions 3.3.1 – 3.5, but we’re not aware of
-issues with any other versions. If you find any, please let us know.
+The WordPress Gift Registry Plugin has been verified with WordPress versions 3.3.1 – 3.5 and 4.0. It is untested for
+versions 3.5.* - 3.9.*, but users have noted layout issues on the admin page as well as the inability to save settings.
 
 = On the Admin page, nothing seems to happen when I click a button, I can’t save my PayPal address or URLs, and/or I get redirected to the General Settings page when I try to save =
 These are all signs that a javascript error occurred when the page was initializing. Check for script errors using
@@ -106,6 +117,10 @@ IPN ERROR - The IPN was received but there was an error processing it. For more 
 Go to [Sliverware Applications](http://sliverwareapps.com/registry) to view screenshots
 
 == Changelog ==
+
+= 2.0 =
+* We are no longer able to support the Gift Registry plugin so we are making it freely available without requiring the purchase of an Auth key
+* Minor updates in support of WP4.0 to fix layout and admin saving issues
 
 = 1.7.3 =
 * Fixes issue where IPNs for gifts from logged-in guests may not complete (we promise)
